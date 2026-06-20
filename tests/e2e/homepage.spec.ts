@@ -1,13 +1,10 @@
 import { expect, test } from "@playwright/test"
 
-test("renders the starter page", async ({ page }) => {
-  await page.goto("/")
+test("application sanity check", async ({ page }) => {
+  const response = await page.goto("/")
 
-  await expect(
-    page.getByRole("heading", { name: "Project ready!" })
-  ).toBeVisible()
-  await expect(
-    page.getByText("You may now add components and start building.")
-  ).toBeVisible()
-  await expect(page.getByRole("button", { name: "Button" })).toBeVisible()
+  expect(response?.ok()).toBe(true)
+  await expect(page).toHaveURL(/\/v1\/blog\/?$/)
+  await expect(page.locator("h1")).toBeVisible()
+  expect(await page.title()).not.toBe("")
 })
