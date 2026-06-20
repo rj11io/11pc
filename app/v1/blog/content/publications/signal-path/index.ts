@@ -28,7 +28,7 @@ export const signalPath: Publication = {
       isNSFW: false,
       isNew: true,
       tags: ["Systems", "Operations"],
-      freeContent: quietSystems,
+      content: quietSystems,
     },
     {
       postId: 104,
@@ -40,7 +40,7 @@ export const signalPath: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Practice", "Teams"],
-      freeContent: feedbackLoops,
+      content: feedbackLoops,
     },
     {
       postId: 109,
@@ -52,7 +52,7 @@ export const signalPath: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Teams", "Documentation"],
-      freeContent: decisionRecords,
+      content: decisionRecords,
     },
   ],
 }

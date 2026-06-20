@@ -28,7 +28,7 @@ export const localWeather: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Field Notes", "Practice"],
-      freeContent: morningRoute,
+      content: morningRoute,
     },
     {
       postId: 308,
@@ -40,7 +40,7 @@ export const localWeather: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Community", "Cities"],
-      freeContent: thirdPlaces,
+      content: thirdPlaces,
     },
     {
       postId: 315,
@@ -52,7 +52,7 @@ export const localWeather: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Cities", "Observation"],
-      freeContent: rainMap,
+      content: rainMap,
     },
   ],
 }

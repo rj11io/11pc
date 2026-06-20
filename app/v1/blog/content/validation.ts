@@ -86,14 +86,8 @@ export function validatePublications(publications: Publication[]) {
       assertDate(post.releaseDate, `${publication.pubId}/${post.postId}.releaseDate`)
       assertTags(post.tags, `${publication.pubId}/${post.postId}.tags`)
 
-      const tiers = [
-        post.freeContent,
-        post.authContent,
-        post.memberContent,
-        post.subscriberContent,
-      ].filter((content) => content?.trim())
-      if (tiers.length === 0) {
-        throw new Error(`${publication.pubId}/${post.postId} has no content tier`)
+      if (!post.content?.trim()) {
+        throw new Error(`${publication.pubId}/${post.postId} has no content`)
       }
     }
   }

@@ -28,7 +28,7 @@ export const materialCulture: Publication = {
       isNSFW: false,
       isNew: true,
       tags: ["Design", "Objects"],
-      freeContent: durableObjects,
+      content: durableObjects,
     },
     {
       postId: 207,
@@ -40,7 +40,7 @@ export const materialCulture: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Repair", "Community"],
-      freeContent: repairLanguage,
+      content: repairLanguage,
     },
     {
       postId: 211,
@@ -52,7 +52,7 @@ export const materialCulture: Publication = {
       isNSFW: false,
       isNew: false,
       tags: ["Tools", "Practice"],
-      freeContent: everydayToolbox,
+      content: everydayToolbox,
     },
   ],
 }

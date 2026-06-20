@@ -8,10 +8,7 @@ export type Post = {
   isNSFW: boolean
   isNew: boolean
   tags: string[]
-  freeContent?: string
-  authContent?: string
-  memberContent?: string
-  subscriberContent?: string
+  content?: string
 }
 
 export type Publication = {
@@ -37,10 +34,7 @@ export type PostListItem = Post & {
   editorialIndex: number
 }
 
-export type PostPreview = Omit<
-  PostListItem,
-  "freeContent" | "authContent" | "memberContent" | "subscriberContent"
->
+export type PostPreview = Omit<PostListItem, "content">
 
 export type PublicationPreview = Omit<Publication, "posts"> & {
   href: string

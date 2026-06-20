@@ -5,8 +5,8 @@ import { notFound } from "next/navigation"
 import { Markdown } from "../../../components/markdown"
 import {
   allPosts,
-  getAnonymousContent,
   getPost,
+  getPostContent,
   stripLeadingH1,
 } from "../../../content/registry"
 import { blogHref, postHref, publicationHref } from "../../../content/routes"
@@ -51,7 +51,7 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!result) notFound()
 
   const { publication, post, postIndex } = result
-  const content = getAnonymousContent(post)
+  const content = getPostContent(post)
   const previous = publication.posts[postIndex - 1]
   const next = publication.posts[postIndex + 1]
 

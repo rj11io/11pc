@@ -88,8 +88,8 @@ export function getPostPreview(publication: Publication, post: Post) {
   return toPostPreview(item)
 }
 
-export function getAnonymousContent(post: Post) {
-  return post.freeContent?.trim() || null
+export function getPostContent(post: Post) {
+  return post.content?.trim() || null
 }
 
 export function stripLeadingH1(markdown: string) {
