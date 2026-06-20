@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/rj11io/11pc/compare/v1.1.0...v1.2.0) (2026-06-20)
+
+
+### Features
+
+* vercel analytics ([0bb1a0e](https://github.com/rj11io/11pc/commit/0bb1a0ea015695f68021084067316501720a722d))
+
 # [1.1.0](https://github.com/rj11io/11pc/compare/v1.0.0...v1.1.0) (2026-06-20)
 
 
