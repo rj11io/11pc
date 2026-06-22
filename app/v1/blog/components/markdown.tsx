@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react"
 
 import {
+  CONTENT_HEADING_OFFSET,
   createHeadingIdFactory,
   markdownHeadingLabel,
   parseMarkdownHeading,
@@ -52,7 +53,9 @@ export function Markdown({ content }: { content: string }) {
           <h2
             id={id}
             key={id}
-            className="mt-12 scroll-mt-10 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+            data-blog-heading
+            style={{ scrollMarginTop: CONTENT_HEADING_OFFSET }}
+            className="mt-12 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
           >
             {inlineMarkdown(heading.source)}
           </h2>
@@ -62,7 +65,9 @@ export function Markdown({ content }: { content: string }) {
           <h3
             id={id}
             key={id}
-            className="mt-10 scroll-mt-10 text-xl font-semibold tracking-tight text-foreground"
+            data-blog-heading
+            style={{ scrollMarginTop: CONTENT_HEADING_OFFSET }}
+            className="mt-10 text-xl font-semibold tracking-tight text-foreground"
           >
             {inlineMarkdown(heading.source)}
           </h3>
@@ -72,7 +77,9 @@ export function Markdown({ content }: { content: string }) {
           <h4
             id={id}
             key={id}
-            className="mt-8 scroll-mt-10 text-lg font-semibold tracking-tight text-foreground"
+            data-blog-heading
+            style={{ scrollMarginTop: CONTENT_HEADING_OFFSET }}
+            className="mt-8 text-lg font-semibold tracking-tight text-foreground"
           >
             {inlineMarkdown(heading.source)}
           </h4>

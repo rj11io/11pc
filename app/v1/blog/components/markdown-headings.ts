@@ -4,6 +4,8 @@ export type MarkdownHeading = {
   level: 2 | 3 | 4
 }
 
+export const CONTENT_HEADING_OFFSET = 96
+
 export function parseMarkdownHeading(line: string) {
   const match = line.trim().match(/^(#{2,4})\s+(.+)$/)
   if (!match) return null
@@ -41,12 +43,32 @@ export function createHeadingIdFactory() {
 
 export function extractMarkdownHeadings(content: string): MarkdownHeading[] {
   const createId = createHeadingIdFactory()
+  const headings: MarkdownHeading[] = []
+  let fence: { marker: string; length: number } | null = null
 
-  return content.split(/\r?\n/).flatMap((line) => {
+  for (const line of content.split(/\r?\n/)) {
+    const fenceMatch = line.trim().match(/^(`{3,}|~{3,})/)
+    if (fenceMatch) {
+      const marker = fenceMatch[1][0]
+      if (!fence) {
+        fence = { marker, length: fenceMatch[1].length }
+      } else if (
+        fence.marker === marker &&
+        fenceMatch[1].length >= fence.length
+      ) {
+        fence = null
+      }
+      continue
+    }
+
+    if (fence) continue
+
     const heading = parseMarkdownHeading(line)
-    if (!heading) return []
+    if (!heading) continue
 
     const label = markdownHeadingLabel(heading.source)
-    return [{ id: createId(label), label, level: heading.level }]
-  })
+    headings.push({ id: createId(label), label, level: heading.level })
+  }
+
+  return headings
 }
