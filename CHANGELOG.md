@@ -1,3 +1,17 @@
+# [1.3.0](https://github.com/rj11io/11pc/compare/v1.2.0...v1.3.0) (2026-07-03)
+
+
+### Bug Fixes
+
+* improvements ([d9a466b](https://github.com/rj11io/11pc/commit/d9a466b5032cc06e6c28961b34103ce9206c4079))
+* table content indicator display ([6dc8155](https://github.com/rj11io/11pc/commit/6dc81551f1b6caa101fb5b3acf4b91707643bc90))
+
+
+### Features
+
+* authors ([0f2149d](https://github.com/rj11io/11pc/commit/0f2149db43a779b27a72663d67b88ab09501c6c1))
+* table of contents init ([fb90ea4](https://github.com/rj11io/11pc/commit/fb90ea4c806180a518c1241996f2ee0b006bb845))
+
 # [1.2.0](https://github.com/rj11io/11pc/compare/v1.1.0...v1.2.0) (2026-06-20)
 
 
