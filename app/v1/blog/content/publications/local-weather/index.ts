@@ -25,6 +25,7 @@ export const localWeather: Publication = {
       excerpt:
         "Returning to one ordinary walk reveals changes that novelty tends to hide.",
       releaseDate: "2026-05-31",
+      authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: false,
       tags: ["Field Notes", "Practice"],
@@ -37,6 +38,7 @@ export const localWeather: Publication = {
       excerpt:
         "Small freedoms in seating and arrangement turn space into social infrastructure.",
       releaseDate: "2026-05-14",
+      authorIds: ["maya-chen", "samir-patel"],
       isNSFW: false,
       isNew: false,
       tags: ["Community", "Cities"],
@@ -49,6 +51,7 @@ export const localWeather: Publication = {
       excerpt:
         "Temporary water and foot traffic expose the permanent logic of streets.",
       releaseDate: "2026-04-22",
+      authorIds: ["samir-patel"],
       isNSFW: false,
       isNew: false,
       tags: ["Cities", "Observation"],

@@ -25,6 +25,7 @@ export const materialCulture: Publication = {
       excerpt:
         "Trust grows when construction, aging, and repair are visible at the surface.",
       releaseDate: "2026-06-05",
+      authorIds: ["maya-chen"],
       isNSFW: false,
       isNew: true,
       tags: ["Design", "Objects"],
@@ -37,6 +38,7 @@ export const materialCulture: Publication = {
       excerpt:
         "Precise observation and shared vocabulary make practical knowledge portable.",
       releaseDate: "2026-05-21",
+      authorIds: ["samir-patel", "maya-chen"],
       isNSFW: false,
       isNew: false,
       tags: ["Repair", "Community"],
@@ -49,6 +51,7 @@ export const materialCulture: Publication = {
       excerpt:
         "Build a compact toolkit around recurring jobs instead of speculative needs.",
       releaseDate: "2026-04-30",
+      authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: false,
       tags: ["Tools", "Practice"],

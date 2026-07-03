@@ -25,6 +25,7 @@ export const signalPath: Publication = {
       excerpt:
         "How useful defaults and deliberate handoffs make operational systems feel calm.",
       releaseDate: "2026-06-12",
+      authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: true,
       tags: ["Systems", "Operations"],
@@ -37,6 +38,7 @@ export const signalPath: Publication = {
       excerpt:
         "Use precise questions and smaller batches to learn while changes are inexpensive.",
       releaseDate: "2026-05-28",
+      authorIds: ["ricardo-jorge", "maya-chen"],
       isNSFW: false,
       isNew: false,
       tags: ["Practice", "Teams"],
@@ -49,6 +51,7 @@ export const signalPath: Publication = {
       excerpt:
         "A compact format for preserving context, tradeoffs, and review triggers.",
       releaseDate: "2026-05-09",
+      authorIds: ["samir-patel"],
       isNSFW: false,
       isNew: false,
       tags: ["Teams", "Documentation"],

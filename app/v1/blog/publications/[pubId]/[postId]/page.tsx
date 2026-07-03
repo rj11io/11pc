@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -11,7 +12,13 @@ import {
   getPostContent,
   stripLeadingH1,
 } from "../../../content/registry"
-import { blogHref, postHref, publicationHref } from "../../../content/routes"
+import {
+  authorHref,
+  blogHref,
+  postHref,
+  publicationHref,
+} from "../../../content/routes"
+import type { AuthorPreview } from "../../../content/types"
 
 type PostPageProps = {
   params: Promise<{ pubId: string; postId: string }>
@@ -23,6 +30,60 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   year: "numeric",
   timeZone: "UTC",
 })
+
+function AuthorAvatar({
+  author,
+  size = "sm",
+}: {
+  author: AuthorPreview
+  size?: "sm" | "md"
+}) {
+  const sizeClass = size === "md" ? "size-12" : "size-9"
+
+  if (author.avatar) {
+    return (
+      <Image
+        src={author.avatar}
+        alt=""
+        width={48}
+        height={48}
+        className={`${sizeClass} rounded-full object-cover ring-1 ring-border`}
+      />
+    )
+  }
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`${sizeClass} inline-flex items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary ring-1 ring-primary/20`}
+    >
+      {author.displayName}
+    </span>
+  )
+}
+
+function AuthorByline({ authors }: { authors: AuthorPreview[] }) {
+  return (
+    <div className="mt-8" aria-label="Authors">
+      <p className="text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+        Written by
+      </p>
+      <ul className="mt-3 flex flex-wrap gap-3">
+        {authors.map((author) => (
+          <li key={author.id}>
+            <Link
+              href={authorHref(author.id)}
+              className="group inline-flex items-center gap-3 rounded-full border border-border bg-background py-1.5 pr-4 pl-1.5 text-sm font-semibold transition outline-none hover:border-foreground/25 hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <AuthorAvatar author={author} />
+              <span className="group-hover:text-primary">{author.name}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export const dynamicParams = false
 
@@ -43,6 +104,7 @@ export async function generateMetadata({
   return {
     title: result.post.title,
     description: result.post.excerpt,
+    authors: result.authors.map((author) => ({ name: author.name })),
     openGraph: result.post.coverImage
       ? { images: [{ url: result.post.coverImage }] }
       : undefined,
@@ -54,7 +116,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const result = getPost(pubId, postId)
   if (!result) notFound()
 
-  const { publication, post, postIndex } = result
+  const { authors, publication, post, postIndex } = result
   const content = getPostContent(post)
   const renderedContent = content ? stripLeadingH1(content) : null
   const headings = renderedContent
@@ -114,6 +176,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   {post.excerpt}
                 </p>
               )}
+              <AuthorByline authors={authors} />
               <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted-foreground">
                 <time dateTime={post.releaseDate}>
                   {dateFormatter.format(

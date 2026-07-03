@@ -1,4 +1,4 @@
-import type { Publication } from "./types"
+import type { Author, Publication } from "./types"
 
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/
 const pubIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -15,7 +15,10 @@ function assertDate(value: string, label: string) {
   }
 
   const parsed = new Date(`${value}T00:00:00.000Z`)
-  if (Number.isNaN(parsed.valueOf()) || parsed.toISOString().slice(0, 10) !== value) {
+  if (
+    Number.isNaN(parsed.valueOf()) ||
+    parsed.toISOString().slice(0, 10) !== value
+  ) {
     throw new Error(`${label} must be a real ISO date`)
   }
 }
@@ -35,9 +38,44 @@ function assertTags(tags: string[], label: string) {
   }
 }
 
-export function validatePublications(publications: Publication[]) {
+function assertUrl(value: string, label: string) {
+  try {
+    const url = new URL(value)
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error("Unsupported protocol")
+    }
+  } catch {
+    throw new Error(`${label} must be an absolute HTTP URL`)
+  }
+}
+
+export function validatePublications(
+  publications: Publication[],
+  authors: Author[]
+) {
   const relIds = new Set<number>()
   const pubIds = new Set<string>()
+  const authorIds = new Set<string>()
+
+  for (const author of authors) {
+    if (!pubIdPattern.test(author.id)) {
+      throw new Error(`${author.id}: author id must be a URL-safe slug`)
+    }
+    if (authorIds.has(author.id)) {
+      throw new Error(`Duplicate author id: ${author.id}`)
+    }
+    authorIds.add(author.id)
+
+    assertNonEmpty(author.name, `${author.id}.name`)
+    assertNonEmpty(author.displayName, `${author.id}.displayName`)
+    assertNonEmpty(author.bio, `${author.id}.bio`)
+    assertTags(author.tags, `${author.id}.tags`)
+
+    for (const [index, link] of (author.links ?? []).entries()) {
+      assertNonEmpty(link.label, `${author.id}.links[${index}].label`)
+      assertUrl(link.url, `${author.id}.links[${index}].url`)
+    }
+  }
 
   for (const publication of publications) {
     if (!Number.isInteger(publication.relId) || publication.relId <= 0) {
@@ -65,7 +103,9 @@ export function validatePublications(publications: Publication[]) {
     const slugs = new Set<string>()
     for (const post of publication.posts) {
       if (!Number.isInteger(post.postId) || post.postId <= 0) {
-        throw new Error(`${publication.pubId}: postId must be a positive integer`)
+        throw new Error(
+          `${publication.pubId}: postId must be a positive integer`
+        )
       }
       if (postIds.has(post.postId)) {
         throw new Error(`${publication.pubId}: duplicate postId ${post.postId}`)
@@ -74,16 +114,43 @@ export function validatePublications(publications: Publication[]) {
 
       if (post.slug) {
         if (!pubIdPattern.test(post.slug)) {
-          throw new Error(`${publication.pubId}/${post.slug}: invalid post slug`)
+          throw new Error(
+            `${publication.pubId}/${post.slug}: invalid post slug`
+          )
         }
         if (slugs.has(post.slug)) {
-          throw new Error(`${publication.pubId}: duplicate post slug ${post.slug}`)
+          throw new Error(
+            `${publication.pubId}: duplicate post slug ${post.slug}`
+          )
         }
         slugs.add(post.slug)
       }
 
       assertNonEmpty(post.title, `${publication.pubId}/${post.postId}.title`)
-      assertDate(post.releaseDate, `${publication.pubId}/${post.postId}.releaseDate`)
+      assertDate(
+        post.releaseDate,
+        `${publication.pubId}/${post.postId}.releaseDate`
+      )
+      if (!post.authorIds.length) {
+        throw new Error(
+          `${publication.pubId}/${post.postId} must have at least one author`
+        )
+      }
+      const postAuthorIds = new Set<string>()
+      for (const authorId of post.authorIds) {
+        if (postAuthorIds.has(authorId)) {
+          throw new Error(
+            `${publication.pubId}/${post.postId} has duplicate author ${authorId}`
+          )
+        }
+        postAuthorIds.add(authorId)
+
+        if (!authorIds.has(authorId)) {
+          throw new Error(
+            `${publication.pubId}/${post.postId} references unknown author ${authorId}`
+          )
+        }
+      }
       assertTags(post.tags, `${publication.pubId}/${post.postId}.tags`)
 
       if (!post.content?.trim()) {

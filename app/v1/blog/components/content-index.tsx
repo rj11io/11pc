@@ -56,13 +56,16 @@ export function ContentIndex({ headings }: { headings: MarkdownHeading[] }) {
   }
 
   React.useEffect(() => {
-    const elements = headings
-      .map((heading) => document.getElementById(heading.id))
-      .filter((element): element is HTMLElement => element !== null)
+    function getHeadingElements() {
+      return headings
+        .map((heading) => document.getElementById(heading.id))
+        .filter((element): element is HTMLElement => element !== null)
+    }
 
     function updateActiveHeading() {
       if (navigationLock.current) return
 
+      const elements = getHeadingElements()
       const isAtPageBottom =
         window.scrollY + window.innerHeight >=
         document.documentElement.scrollHeight - 2
@@ -89,6 +92,7 @@ export function ContentIndex({ headings }: { headings: MarkdownHeading[] }) {
 
     function selectHashHeading() {
       const hashId = window.location.hash.slice(1)
+      const elements = getHeadingElements()
       const hashTarget = elements.find((element) => element.id === hashId)
       navigationLock.current = hashTarget?.id ?? null
 

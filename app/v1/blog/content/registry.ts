@@ -1,8 +1,12 @@
+import { authors } from "./authors"
 import { localWeather } from "./publications/local-weather"
 import { materialCulture } from "./publications/material-culture"
 import { signalPath } from "./publications/signal-path"
-import { postHref, publicationHref } from "./routes"
+import { authorHref, postHref, publicationHref } from "./routes"
 import type {
+  Author,
+  AuthorListItem,
+  AuthorPreview,
   Post,
   PostListItem,
   PostPreview,
@@ -17,11 +21,35 @@ export const publications: Publication[] = [
   localWeather,
 ]
 
-validatePublications(publications)
+export const blogAuthors: Author[] = authors
+
+validatePublications(publications, blogAuthors)
+
+const authorsById = new Map(blogAuthors.map((author) => [author.id, author]))
+
+function toAuthorPreview(author: Author): AuthorPreview {
+  return {
+    id: author.id,
+    name: author.name,
+    displayName: author.displayName,
+    avatar: author.avatar,
+  }
+}
+
+function resolveAuthors(post: Post) {
+  return post.authorIds.map((authorId) => {
+    const author = authorsById.get(authorId)
+    if (!author) {
+      throw new Error(`${post.title} references unknown author ${authorId}`)
+    }
+    return toAuthorPreview(author)
+  })
+}
 
 export const allPosts: PostListItem[] = publications.flatMap((publication) =>
   publication.posts.map((post, editorialIndex) => ({
     ...post,
+    authors: resolveAuthors(post),
     publicationId: publication.pubId,
     publicationTitle: publication.title,
     publicationHref: publicationHref(publication.pubId),
@@ -46,6 +74,7 @@ function toPostPreview(post: PostListItem): PostPreview {
     excerpt: post.excerpt,
     releaseDate: post.releaseDate,
     coverImage: post.coverImage,
+    authors: post.authors,
     isNSFW: post.isNSFW,
     isNew: post.isNew,
     tags: post.tags,
@@ -58,6 +87,19 @@ function toPostPreview(post: PostListItem): PostPreview {
 }
 
 export const postPreviews = allPosts.map(toPostPreview)
+
+export const authorPreviews: AuthorListItem[] = blogAuthors.map((author) => ({
+  id: author.id,
+  name: author.name,
+  displayName: author.displayName,
+  bio: author.bio,
+  avatar: author.avatar,
+  tags: author.tags,
+  href: authorHref(author.id),
+  postCount: postPreviews.filter((post) =>
+    post.authors.some((postAuthor) => postAuthor.id === author.id)
+  ).length,
+}))
 
 export function getPublication(pubId: string) {
   return publications.find((publication) => publication.pubId === pubId)
@@ -72,13 +114,31 @@ export function getPost(pubId: string, postKey: string) {
   )
   if (postIndex === -1) return undefined
 
-  return { publication, post: publication.posts[postIndex], postIndex }
+  const post = publication.posts[postIndex]
+
+  return {
+    publication,
+    post,
+    authors: resolveAuthors(post),
+    postIndex,
+  }
+}
+
+export function getAuthor(authorId: string) {
+  return authorsById.get(authorId)
+}
+
+export function getPostsByAuthor(authorId: string) {
+  return postPreviews.filter((post) =>
+    post.authors.some((author) => author.id === authorId)
+  )
 }
 
 export function getPostPreview(publication: Publication, post: Post) {
   const editorialIndex = publication.posts.indexOf(post)
   const item: PostListItem = {
     ...post,
+    authors: resolveAuthors(post),
     publicationId: publication.pubId,
     publicationTitle: publication.title,
     publicationHref: publicationHref(publication.pubId),

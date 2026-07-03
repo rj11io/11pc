@@ -1,3 +1,31 @@
+export type AuthorLink = {
+  label: string
+  url: string
+}
+
+export type Author = {
+  id: string
+  name: string
+  displayName: string
+  bio: string
+  avatar?: string
+  links?: AuthorLink[]
+  tags: string[]
+}
+
+export type AuthorPreview = Pick<
+  Author,
+  "id" | "name" | "displayName" | "avatar"
+>
+
+export type AuthorListItem = Pick<
+  Author,
+  "id" | "name" | "displayName" | "bio" | "avatar" | "tags"
+> & {
+  href: string
+  postCount: number
+}
+
 export type Post = {
   postId: number
   slug?: string
@@ -5,6 +33,7 @@ export type Post = {
   excerpt?: string
   releaseDate: string
   coverImage?: string
+  authorIds: string[]
   isNSFW: boolean
   isNew: boolean
   tags: string[]
@@ -27,6 +56,7 @@ export type Publication = {
 }
 
 export type PostListItem = Post & {
+  authors: AuthorPreview[]
   publicationId: string
   publicationTitle: string
   publicationHref: string
@@ -34,7 +64,7 @@ export type PostListItem = Post & {
   editorialIndex: number
 }
 
-export type PostPreview = Omit<PostListItem, "content">
+export type PostPreview = Omit<PostListItem, "content" | "authorIds">
 
 export type PublicationPreview = Omit<Publication, "posts"> & {
   href: string
