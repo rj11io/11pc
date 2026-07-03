@@ -29,17 +29,21 @@ test("shows linked post authors and supports author drill-down", async ({
 test("browses authors from the library content switcher", async ({ page }) => {
   await page.goto("/v1/blog")
 
-  await page.getByRole("button", { name: "Authors" }).click()
-  await expect(page.getByRole("button", { name: "Authors" })).toHaveAttribute(
-    "aria-pressed",
-    "true"
+  await page.getByRole("link", { name: "Authors" }).click()
+  await expect(page).toHaveURL(/\/v1\/blog\?content=authors$/)
+  await expect(page.getByRole("link", { name: "Authors" })).toHaveAttribute(
+    "aria-current",
+    "page"
   )
   await expect(
     page.getByRole("link", { name: "Open author profile for Ricardo Jorge" })
   ).toBeVisible()
   await expect(page.getByRole("button", { name: "Interfaces" })).toBeVisible()
 
-  await page.getByRole("button", { name: "Repair" }).click()
+  await page
+    .getByLabel("Filter authors by tag")
+    .getByRole("button", { name: "Repair" })
+    .click()
   await expect(
     page.getByRole("link", { name: "Open author profile for Maya Chen" })
   ).toBeVisible()
@@ -54,4 +58,43 @@ test("browses authors from the library content switcher", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Maya Chen", level: 1 })
   ).toBeVisible()
+})
+
+test("syncs the library content selection with the URL", async ({ page }) => {
+  await page.goto("/v1/blog?content=authors")
+
+  await expect(page.getByRole("link", { name: "Authors" })).toHaveAttribute(
+    "aria-current",
+    "page"
+  )
+  await expect(
+    page.getByRole("link", { name: "Open author profile for Ricardo Jorge" })
+  ).toBeVisible()
+
+  await page.getByRole("link", { name: "Publications" }).click()
+  await expect(page).toHaveURL(/\/v1\/blog\?content=publications$/)
+  await expect(
+    page.getByRole("link", { name: "Publications" })
+  ).toHaveAttribute("aria-current", "page")
+
+  await page.getByRole("link", { name: "Posts" }).click()
+  await expect(page).toHaveURL(/\/v1\/blog\?content=posts$/)
+  await expect(page.getByRole("link", { name: "Posts" })).toHaveAttribute(
+    "aria-current",
+    "page"
+  )
+
+  await page.goto("/v1/blog")
+  await expect(page).toHaveURL(/\/v1\/blog$/)
+  await expect(page.getByRole("link", { name: "Posts" })).toHaveAttribute(
+    "aria-current",
+    "page"
+  )
+
+  await page.goto("/v1/blog?content=unknown")
+  await expect(page).toHaveURL(/\/v1\/blog\?content=unknown$/)
+  await expect(page.getByRole("link", { name: "Posts" })).toHaveAttribute(
+    "aria-current",
+    "page"
+  )
 })

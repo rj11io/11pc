@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 
 import { Library } from "./components/library"
 import {
@@ -60,11 +61,13 @@ export default function BlogPage() {
           </div>
         </header>
 
-        <Library
-          authors={authorPreviews}
-          posts={postPreviews}
-          publications={publicationPreviews}
-        />
+        <Suspense>
+          <Library
+            authors={authorPreviews}
+            posts={postPreviews}
+            publications={publicationPreviews}
+          />
+        </Suspense>
 
         <footer className="mt-20 border-t border-border py-8 text-sm text-muted-foreground">
           A file-backed editorial collection. New writing arrives periodically.

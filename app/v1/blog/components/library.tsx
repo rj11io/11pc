@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { Grid2X2, List, Search } from "lucide-react"
 import * as React from "react"
 
@@ -27,6 +28,30 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   year: "numeric",
   timeZone: "UTC",
 })
+
+const contentTypes = ["posts", "publications", "authors"] as const
+const contentParam = "content"
+
+function isContentType(value: string | null): value is ContentType {
+  return contentTypes.some((type) => type === value)
+}
+
+function getContentTypeFromParams(searchParams: URLSearchParams) {
+  const value = searchParams.get(contentParam)
+  return isContentType(value) ? value : "posts"
+}
+
+function createContentHref(
+  contentType: ContentType,
+  searchParams: URLSearchParams
+) {
+  const nextParams = new URLSearchParams(searchParams.toString())
+  nextParams.set(contentParam, contentType)
+
+  const query = nextParams.toString()
+
+  return `?${query}`
+}
 
 function formatDate(value: string) {
   return dateFormatter.format(new Date(`${value}T00:00:00Z`))
@@ -294,7 +319,12 @@ function PublicationResult({
 }
 
 export function Library({ authors, posts, publications }: LibraryProps) {
-  const [contentType, setContentType] = React.useState<ContentType>("posts")
+  const searchParams = useSearchParams()
+  const contentType = React.useMemo(
+    () =>
+      getContentTypeFromParams(new URLSearchParams(searchParams.toString())),
+    [searchParams]
+  )
   const [viewMode, setViewMode] = React.useState<ViewMode>("list")
   const [sortOrder, setSortOrder] = React.useState<SortOrder>("relevance")
   const [query, setQuery] = React.useState("")
@@ -310,6 +340,11 @@ export function Library({ authors, posts, publications }: LibraryProps) {
             : authors
       ),
     [authors, contentType, posts, publications]
+  )
+
+  const activeSelectedTags = React.useMemo(
+    () => selectedTags.filter((tag) => availableTags.includes(tag)),
+    [availableTags, selectedTags]
   )
 
   const filteredPosts = React.useMemo(() => {
@@ -328,11 +363,11 @@ export function Library({ authors, posts, publications }: LibraryProps) {
         .toLocaleLowerCase()
       return (
         (!needle || searchText.includes(needle)) &&
-        matchesTags(post.tags, selectedTags)
+        matchesTags(post.tags, activeSelectedTags)
       )
     })
     return sortByDate(filtered, sortOrder)
-  }, [contentType, posts, query, selectedTags, sortOrder])
+  }, [activeSelectedTags, contentType, posts, query, sortOrder])
 
   const filteredPublications = React.useMemo(() => {
     if (contentType !== "publications") return []
@@ -349,11 +384,11 @@ export function Library({ authors, posts, publications }: LibraryProps) {
         .toLocaleLowerCase()
       return (
         (!needle || searchText.includes(needle)) &&
-        matchesTags(publication.tags, selectedTags)
+        matchesTags(publication.tags, activeSelectedTags)
       )
     })
     return sortByDate(filtered, sortOrder)
-  }, [contentType, publications, query, selectedTags, sortOrder])
+  }, [activeSelectedTags, contentType, publications, query, sortOrder])
 
   const filteredAuthors = React.useMemo(() => {
     if (contentType !== "authors") return []
@@ -371,11 +406,11 @@ export function Library({ authors, posts, publications }: LibraryProps) {
         .toLocaleLowerCase()
       return (
         (!needle || searchText.includes(needle)) &&
-        matchesTags(author.tags, selectedTags)
+        matchesTags(author.tags, activeSelectedTags)
       )
     })
     return sortAuthors(filtered)
-  }, [authors, contentType, query, selectedTags])
+  }, [activeSelectedTags, authors, contentType, query])
 
   const resultCount =
     contentType === "posts"
@@ -384,8 +419,7 @@ export function Library({ authors, posts, publications }: LibraryProps) {
         ? filteredPublications.length
         : filteredAuthors.length
 
-  function changeContentType(nextType: ContentType) {
-    if (nextType === contentType) return
+  function pruneSelectedTags(nextType: ContentType) {
     const nextTags = getTags(
       nextType === "posts"
         ? posts
@@ -393,17 +427,17 @@ export function Library({ authors, posts, publications }: LibraryProps) {
           ? publications
           : authors
     )
+
     setSelectedTags((current) =>
       current.filter((tag) => nextTags.includes(tag))
     )
-    setContentType(nextType)
   }
 
   function toggleTag(tag: string) {
-    setSelectedTags((current) =>
-      current.includes(tag)
-        ? current.filter((item) => item !== tag)
-        : [...current, tag]
+    setSelectedTags(() =>
+      activeSelectedTags.includes(tag)
+        ? activeSelectedTags.filter((item) => item !== tag)
+        : [...activeSelectedTags, tag]
     )
   }
 
@@ -430,17 +464,28 @@ export function Library({ authors, posts, publications }: LibraryProps) {
             className="inline-flex rounded-full border border-border bg-muted/50 p-1"
             aria-label="Content type"
           >
-            {(["posts", "publications", "authors"] as const).map((type) => (
-              <button
-                key={type}
-                type="button"
-                aria-pressed={contentType === type}
-                onClick={() => changeContentType(type)}
-                className="rounded-full px-4 py-2 text-sm font-medium capitalize transition aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm"
-              >
-                {type}
-              </button>
-            ))}
+            {contentTypes.map((type) => {
+              const isSelected = contentType === type
+
+              return (
+                <Link
+                  key={type}
+                  href={createContentHref(
+                    type,
+                    new URLSearchParams(searchParams.toString())
+                  )}
+                  aria-current={isSelected ? "page" : undefined}
+                  onClick={() => pruneSelectedTags(type)}
+                  className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                    isSelected
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {type}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -527,7 +572,7 @@ export function Library({ authors, posts, publications }: LibraryProps) {
             <button
               key={tag}
               type="button"
-              aria-pressed={selectedTags.includes(tag)}
+              aria-pressed={activeSelectedTags.includes(tag)}
               onClick={() => toggleTag(tag)}
               className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-foreground/30 hover:text-foreground aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary"
             >
