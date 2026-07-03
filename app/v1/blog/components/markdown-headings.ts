@@ -1,28 +1,20 @@
+import { toString } from "mdast-util-to-string"
+import remarkGfm from "remark-gfm"
+import remarkParse from "remark-parse"
+import { unified } from "unified"
+import { visit } from "unist-util-visit"
+
 export type MarkdownHeading = {
   id: string
   label: string
-  level: 2 | 3 | 4
+  level: 2 | 3 | 4 | 5
+}
+
+type HeadingNode = {
+  depth?: number
 }
 
 export const CONTENT_HEADING_OFFSET = 96
-
-export function parseMarkdownHeading(line: string) {
-  const match = line.trim().match(/^(#{2,4})\s+(.+)$/)
-  if (!match) return null
-
-  return {
-    level: match[1].length as MarkdownHeading["level"],
-    source: match[2].trim(),
-  }
-}
-
-export function markdownHeadingLabel(source: string) {
-  return source
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/\*\*([^*]+)\*\*/g, "$1")
-    .replace(/[*_~]/g, "")
-    .trim()
-}
 
 export function createHeadingIdFactory() {
   const occurrences = new Map<string, number>()
@@ -41,34 +33,24 @@ export function createHeadingIdFactory() {
   }
 }
 
+export function markdownHeadingLabel(node: unknown) {
+  return toString(node).trim()
+}
+
 export function extractMarkdownHeadings(content: string): MarkdownHeading[] {
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(content)
   const createId = createHeadingIdFactory()
   const headings: MarkdownHeading[] = []
-  let fence: { marker: string; length: number } | null = null
 
-  for (const line of content.split(/\r?\n/)) {
-    const fenceMatch = line.trim().match(/^(`{3,}|~{3,})/)
-    if (fenceMatch) {
-      const marker = fenceMatch[1][0]
-      if (!fence) {
-        fence = { marker, length: fenceMatch[1].length }
-      } else if (
-        fence.marker === marker &&
-        fenceMatch[1].length >= fence.length
-      ) {
-        fence = null
-      }
-      continue
-    }
+  visit(tree, "heading", (node) => {
+    const depth = (node as HeadingNode).depth
+    if (depth !== 2 && depth !== 3 && depth !== 4 && depth !== 5) return
 
-    if (fence) continue
+    const label = markdownHeadingLabel(node)
+    if (!label) return
 
-    const heading = parseMarkdownHeading(line)
-    if (!heading) continue
-
-    const label = markdownHeadingLabel(heading.source)
-    headings.push({ id: createId(label), label, level: heading.level })
-  }
+    headings.push({ id: createId(label), label, level: depth })
+  })
 
   return headings
 }

@@ -29,7 +29,9 @@ function IndexLinks({
                 ? "pl-4"
                 : heading.level === 3
                   ? "pl-7"
-                  : "pl-10"
+                  : heading.level === 4
+                    ? "pl-10"
+                    : "pl-12"
             } ${
               activeId === heading.id
                 ? "border-primary font-medium text-foreground"
