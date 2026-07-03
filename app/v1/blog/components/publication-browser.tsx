@@ -28,7 +28,10 @@ export function PublicationBrowser({
   const [selectedTags, setSelectedTags] = React.useState<string[]>([])
 
   const availableTags = React.useMemo(
-    () => [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.localeCompare(b)),
+    () =>
+      [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) =>
+        a.localeCompare(b)
+      ),
     [posts]
   )
 
@@ -47,20 +50,26 @@ export function PublicationBrowser({
 
     if (sortOrder === "featured") return filtered
     return [...filtered].sort((a, b) => {
-      const comparison = a.releaseDate.localeCompare(b.releaseDate)
+      const comparison = a.created.localeCompare(b.created)
       return sortOrder === "newest" ? -comparison : comparison
     })
   }, [posts, query, selectedTags, sortOrder])
 
   function toggleTag(tag: string) {
     setSelectedTags((current) =>
-      current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag]
+      current.includes(tag)
+        ? current.filter((item) => item !== tag)
+        : [...current, tag]
     )
   }
 
   return (
     <section className="mt-10">
-      <div className="flex gap-1 border-b border-border" role="tablist" aria-label="Publication sections">
+      <div
+        className="flex gap-1 border-b border-border"
+        role="tablist"
+        aria-label="Publication sections"
+      >
         {(
           [
             ["posts", "Posts"],
@@ -82,13 +91,19 @@ export function PublicationBrowser({
       </div>
 
       {tab === "synopsis" && synopsis && (
-        <div role="tabpanel" className="max-w-3xl py-10 text-lg leading-8 text-muted-foreground">
+        <div
+          role="tabpanel"
+          className="max-w-3xl py-10 text-lg leading-8 text-muted-foreground"
+        >
           {synopsis}
         </div>
       )}
 
       {tab === "notes" && editorNotes && (
-        <div role="tabpanel" className="max-w-3xl py-10 text-lg leading-8 text-muted-foreground">
+        <div
+          role="tabpanel"
+          className="max-w-3xl py-10 text-lg leading-8 text-muted-foreground"
+        >
           {editorNotes}
         </div>
       )}
@@ -97,26 +112,31 @@ export function PublicationBrowser({
         <div role="tabpanel" className="py-8">
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:items-end">
             <label className="relative block">
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="mb-2 block text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Search posts
               </span>
-              <Search aria-hidden="true" className="absolute bottom-3 left-3 size-4 text-muted-foreground" />
+              <Search
+                aria-hidden="true"
+                className="absolute bottom-3 left-3 size-4 text-muted-foreground"
+              />
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search this publication…"
-                className="h-11 w-full rounded-xl border border-input bg-background pl-10 pr-4 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-11 w-full rounded-xl border border-input bg-background pr-4 pl-10 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </label>
 
             <label>
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="mb-2 block text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Sort
               </span>
               <select
                 value={sortOrder}
-                onChange={(event) => setSortOrder(event.target.value as SortOrder)}
+                onChange={(event) =>
+                  setSortOrder(event.target.value as SortOrder)
+                }
                 className="h-11 min-w-40 rounded-xl border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <option value="featured">Featured</option>
@@ -126,10 +146,13 @@ export function PublicationBrowser({
             </label>
 
             <div>
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="mb-2 block text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Layout
               </span>
-              <div className="inline-flex h-11 rounded-xl border border-border bg-muted/50 p-1" aria-label="Post layout">
+              <div
+                className="inline-flex h-11 rounded-xl border border-border bg-muted/50 p-1"
+                aria-label="Post layout"
+              >
                 <button
                   type="button"
                   aria-label="List view"
@@ -152,7 +175,10 @@ export function PublicationBrowser({
             </div>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-2" aria-label="Filter posts by tag">
+          <div
+            className="mt-5 flex flex-wrap gap-2"
+            aria-label="Filter posts by tag"
+          >
             {availableTags.map((tag) => (
               <button
                 key={tag}
@@ -167,11 +193,18 @@ export function PublicationBrowser({
           </div>
 
           <p className="mt-6 text-sm text-muted-foreground" aria-live="polite">
-            {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
+            {filteredPosts.length}{" "}
+            {filteredPosts.length === 1 ? "post" : "posts"}
           </p>
 
           {filteredPosts.length ? (
-            <div className={viewMode === "list" ? "mt-4 grid gap-3" : "mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3"}>
+            <div
+              className={
+                viewMode === "list"
+                  ? "mt-4 grid gap-3"
+                  : "mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+              }
+            >
               {filteredPosts.map((post) => (
                 <PostResult
                   key={`${post.publicationId}-${post.postId}`}

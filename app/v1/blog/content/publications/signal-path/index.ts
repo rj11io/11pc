@@ -9,7 +9,8 @@ export const signalPath: Publication = {
   title: "Signal Path",
   description:
     "Field notes on making teams, tools, and decisions easier to understand.",
-  releaseDate: "2026-06-12",
+  created: "2026-06-12",
+  updated: "2026-06-20",
   isNSFW: false,
   isNew: true,
   tags: ["Systems", "Practice", "Teams"],
@@ -24,7 +25,8 @@ export const signalPath: Publication = {
       title: "Designing systems that do not demand attention",
       excerpt:
         "How useful defaults and deliberate handoffs make operational systems feel calm.",
-      releaseDate: "2026-06-12",
+      created: "2026-06-12",
+      updated: "2026-06-18",
       authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: true,
@@ -37,7 +39,8 @@ export const signalPath: Publication = {
       title: "A practical guide to shorter feedback loops",
       excerpt:
         "Use precise questions and smaller batches to learn while changes are inexpensive.",
-      releaseDate: "2026-05-28",
+      created: "2026-05-28",
+      updated: "2026-06-04",
       authorIds: ["ricardo-jorge", "maya-chen"],
       isNSFW: false,
       isNew: false,
@@ -50,7 +53,7 @@ export const signalPath: Publication = {
       title: "Decision records for small teams",
       excerpt:
         "A compact format for preserving context, tradeoffs, and review triggers.",
-      releaseDate: "2026-05-09",
+      created: "2026-05-09",
       authorIds: ["samir-patel"],
       isNSFW: false,
       isNew: false,

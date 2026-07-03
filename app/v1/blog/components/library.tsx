@@ -57,14 +57,14 @@ function formatDate(value: string) {
   return dateFormatter.format(new Date(`${value}T00:00:00Z`))
 }
 
-function sortByDate<T extends { releaseDate: string }>(
+function sortByDate<T extends { created: string }>(
   items: T[],
   sortOrder: SortOrder
 ) {
   if (sortOrder === "relevance") return items
 
   return [...items].sort((a, b) => {
-    const comparison = a.releaseDate.localeCompare(b.releaseDate)
+    const comparison = a.created.localeCompare(b.created)
     return sortOrder === "newest" ? -comparison : comparison
   })
 }
@@ -111,6 +111,16 @@ function formatAuthorNames(authors: PostPreview["authors"]) {
     .slice(0, -1)
     .map((author) => author.name)
     .join(", ")}, and ${authors.at(-1)?.name}`
+}
+
+function UpdatedDate({ value }: { value?: string }) {
+  if (!value) return null
+
+  return (
+    <span className="mt-1 block text-xs text-muted-foreground">
+      Updated {formatDate(value)}
+    </span>
+  )
 }
 
 function AuthorAvatar({ author }: { author: AuthorListItem }) {
@@ -212,10 +222,13 @@ export function PostResult({
           </p>
           <time
             className="mt-1 block text-xs text-muted-foreground"
-            dateTime={post.releaseDate}
+            dateTime={post.created}
           >
-            {formatDate(post.releaseDate)}
+            {formatDate(post.created)}
           </time>
+          {post.updated !== post.created && (
+            <UpdatedDate value={post.updated} />
+          )}
           <p className="mt-2 text-xs text-muted-foreground">
             By {formatAuthorNames(post.authors)}
           </p>
@@ -279,10 +292,13 @@ function PublicationResult({
           </p>
           <time
             className="mt-1 block text-xs text-muted-foreground"
-            dateTime={publication.releaseDate}
+            dateTime={publication.created}
           >
-            {formatDate(publication.releaseDate)}
+            {formatDate(publication.created)}
           </time>
+          {publication.updated !== publication.created && (
+            <UpdatedDate value={publication.updated} />
+          )}
         </div>
         <div>
           <div className="flex flex-wrap items-center gap-2">

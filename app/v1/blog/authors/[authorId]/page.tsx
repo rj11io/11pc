@@ -169,9 +169,9 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                     <span aria-hidden="true" className="text-muted-foreground">
                       ·
                     </span>
-                    <time dateTime={post.releaseDate}>
+                    <time dateTime={post.created}>
                       {dateFormatter.format(
-                        new Date(`${post.releaseDate}T00:00:00Z`)
+                        new Date(`${post.created}T00:00:00Z`)
                       )}
                     </time>
                   </div>

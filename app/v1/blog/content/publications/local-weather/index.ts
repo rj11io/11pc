@@ -9,7 +9,7 @@ export const localWeather: Publication = {
   title: "Local Weather",
   description:
     "Close readings of streets, shared spaces, and the everyday life of a place.",
-  releaseDate: "2026-05-31",
+  created: "2026-05-31",
   isNSFW: false,
   isNew: false,
   tags: ["Cities", "Field Notes", "Community"],
@@ -24,7 +24,7 @@ export const localWeather: Publication = {
       title: "Notes from the morning route",
       excerpt:
         "Returning to one ordinary walk reveals changes that novelty tends to hide.",
-      releaseDate: "2026-05-31",
+      created: "2026-05-31",
       authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: false,
@@ -37,7 +37,8 @@ export const localWeather: Publication = {
       title: "Third places, one chair at a time",
       excerpt:
         "Small freedoms in seating and arrangement turn space into social infrastructure.",
-      releaseDate: "2026-05-14",
+      created: "2026-05-14",
+      updated: "2026-05-22",
       authorIds: ["maya-chen", "samir-patel"],
       isNSFW: false,
       isNew: false,
@@ -50,7 +51,7 @@ export const localWeather: Publication = {
       title: "Mapping a city after rain",
       excerpt:
         "Temporary water and foot traffic expose the permanent logic of streets.",
-      releaseDate: "2026-04-22",
+      created: "2026-04-22",
       authorIds: ["samir-patel"],
       isNSFW: false,
       isNew: false,

@@ -31,7 +31,8 @@ export type Post = {
   slug?: string
   title: string
   excerpt?: string
-  releaseDate: string
+  created: string
+  updated?: string
   coverImage?: string
   authorIds: string[]
   isNSFW: boolean
@@ -45,7 +46,8 @@ export type Publication = {
   pubId: string
   title: string
   description: string
-  releaseDate: string
+  created: string
+  updated?: string
   isNSFW: boolean
   isNew: boolean
   tags: string[]

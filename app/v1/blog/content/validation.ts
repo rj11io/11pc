@@ -23,6 +23,20 @@ function assertDate(value: string, label: string) {
   }
 }
 
+function assertOptionalUpdatedDate(
+  created: string,
+  updated: string | undefined,
+  label: string
+) {
+  if (!updated) return
+
+  assertDate(updated, `${label}.updated`)
+
+  if (updated < created) {
+    throw new Error(`${label}.updated must not be before ${label}.created`)
+  }
+}
+
 function assertTags(tags: string[], label: string) {
   const normalized = tags.map((tag) => tag.trim())
   if (normalized.some((tag) => !tag)) {
@@ -96,7 +110,12 @@ export function validatePublications(
 
     assertNonEmpty(publication.title, `${publication.pubId}.title`)
     assertNonEmpty(publication.description, `${publication.pubId}.description`)
-    assertDate(publication.releaseDate, `${publication.pubId}.releaseDate`)
+    assertDate(publication.created, `${publication.pubId}.created`)
+    assertOptionalUpdatedDate(
+      publication.created,
+      publication.updated,
+      publication.pubId
+    )
     assertTags(publication.tags, `${publication.pubId}.tags`)
 
     const postIds = new Set<number>()
@@ -127,9 +146,11 @@ export function validatePublications(
       }
 
       assertNonEmpty(post.title, `${publication.pubId}/${post.postId}.title`)
-      assertDate(
-        post.releaseDate,
-        `${publication.pubId}/${post.postId}.releaseDate`
+      assertDate(post.created, `${publication.pubId}/${post.postId}.created`)
+      assertOptionalUpdatedDate(
+        post.created,
+        post.updated,
+        `${publication.pubId}/${post.postId}`
       )
       if (!post.authorIds.length) {
         throw new Error(

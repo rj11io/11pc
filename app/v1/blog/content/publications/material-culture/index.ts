@@ -9,7 +9,7 @@ export const materialCulture: Publication = {
   title: "Material Culture",
   description:
     "Observations on useful objects, repair, and the choices that make things last.",
-  releaseDate: "2026-06-05",
+  created: "2026-06-05",
   isNSFW: false,
   isNew: true,
   tags: ["Design", "Objects", "Repair"],
@@ -24,7 +24,8 @@ export const materialCulture: Publication = {
       title: "What makes an object feel durable?",
       excerpt:
         "Trust grows when construction, aging, and repair are visible at the surface.",
-      releaseDate: "2026-06-05",
+      created: "2026-06-05",
+      updated: "2026-06-09",
       authorIds: ["maya-chen"],
       isNSFW: false,
       isNew: true,
@@ -37,7 +38,7 @@ export const materialCulture: Publication = {
       title: "The language of repair",
       excerpt:
         "Precise observation and shared vocabulary make practical knowledge portable.",
-      releaseDate: "2026-05-21",
+      created: "2026-05-21",
       authorIds: ["samir-patel", "maya-chen"],
       isNSFW: false,
       isNew: false,
@@ -50,7 +51,7 @@ export const materialCulture: Publication = {
       title: "A smaller everyday toolbox",
       excerpt:
         "Build a compact toolkit around recurring jobs instead of speculative needs.",
-      releaseDate: "2026-04-30",
+      created: "2026-04-30",
       authorIds: ["ricardo-jorge"],
       isNSFW: false,
       isNew: false,

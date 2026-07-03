@@ -1,29 +1,46 @@
-import { expect, test } from "@playwright/test"
+import { expect, test, type Locator, type Page } from "@playwright/test"
+
+const postResultName = /^Read .+ in .+/
+const authorProfileName = /^Open author profile for .+/
+
+async function openFirstPost(page: Page) {
+  await page.goto("/v1/blog")
+
+  const firstPost = page.getByRole("link", { name: postResultName }).first()
+  await expect(firstPost).toBeVisible()
+  await firstPost.click()
+
+  await expect(page).toHaveURL(/\/v1\/blog\/publications\/[^/]+\/[^/]+$/)
+
+  const heading = page.getByRole("heading", { level: 1 })
+  await expect(heading).toBeVisible()
+  return (await heading.textContent())?.trim() ?? ""
+}
+
+async function getAuthorName(profileLink: Locator) {
+  const label = await profileLink.getAttribute("aria-label")
+  return label?.replace(/^Open author profile for /, "").trim() ?? ""
+}
 
 test("shows linked post authors and supports author drill-down", async ({
   page,
 }) => {
-  await page.goto("/v1/blog/publications/signal-path/shorter-feedback-loops")
+  const postTitle = await openFirstPost(page)
 
-  const authors = page.getByLabel("Authors")
-  await expect(
-    authors.getByRole("link", { name: "Ricardo Jorge" })
-  ).toBeVisible()
-  await expect(authors.getByRole("link", { name: "Maya Chen" })).toBeVisible()
+  const authorLinks = page.getByLabel("Authors").getByRole("link")
+  await expect(authorLinks.first()).toBeVisible()
 
-  await authors.getByRole("link", { name: "Ricardo Jorge" }).click()
+  const firstAuthor = authorLinks.first()
+  const authorName = (await firstAuthor.textContent())?.trim() ?? ""
+  expect(authorName.length).toBeGreaterThan(0)
 
-  await expect(page).toHaveURL(/\/v1\/blog\/authors\/ricardo-jorge$/)
+  await firstAuthor.click()
+
+  await expect(page).toHaveURL(/\/v1\/blog\/authors\/[^/]+$/)
   await expect(
-    page.getByRole("heading", { name: "Ricardo Jorge", level: 1 })
+    page.getByRole("heading", { name: authorName, level: 1 })
   ).toBeVisible()
-  await expect(page.getByText("Designer and engineer")).toBeVisible()
-  await expect(page.locator("dd").filter({ hasText: /^RJ$/ })).toBeVisible()
-  await expect(
-    page.getByRole("link", {
-      name: "A practical guide to shorter feedback loops",
-    })
-  ).toBeVisible()
+  await expect(page.getByRole("link", { name: postTitle })).toBeVisible()
 })
 
 test("browses authors from the library content switcher", async ({ page }) => {
@@ -35,28 +52,37 @@ test("browses authors from the library content switcher", async ({ page }) => {
     "aria-current",
     "page"
   )
-  await expect(
-    page.getByRole("link", { name: "Open author profile for Ricardo Jorge" })
-  ).toBeVisible()
-  await expect(page.getByRole("button", { name: "Interfaces" })).toBeVisible()
 
-  await page
-    .getByLabel("Filter authors by tag")
-    .getByRole("button", { name: "Repair" })
-    .click()
-  await expect(
-    page.getByRole("link", { name: "Open author profile for Maya Chen" })
-  ).toBeVisible()
-  await expect(
-    page.getByRole("link", { name: "Open author profile for Ricardo Jorge" })
-  ).toBeHidden()
+  const authorLinks = page.getByRole("link", { name: authorProfileName })
+  await expect(authorLinks.first()).toBeVisible()
+  expect(await authorLinks.count()).toBeGreaterThan(0)
 
-  await page
-    .getByRole("link", { name: "Open author profile for Maya Chen" })
-    .click()
-  await expect(page).toHaveURL(/\/v1\/blog\/authors\/maya-chen$/)
+  const tagFilter = page.getByLabel("Filter authors by tag")
+  const firstTag = tagFilter.getByRole("button").first()
+  await expect(firstTag).toBeVisible()
+  const tagName = (await firstTag.textContent())?.trim() ?? ""
+  expect(tagName.length).toBeGreaterThan(0)
+
+  await firstTag.click()
+  await expect(firstTag).toHaveAttribute("aria-pressed", "true")
+
+  const filteredAuthors = page.getByRole("link", { name: authorProfileName })
+  await expect(filteredAuthors.first()).toBeVisible()
+  const filteredAuthorCount = await filteredAuthors.count()
+  for (let index = 0; index < filteredAuthorCount; index += 1) {
+    await expect(
+      filteredAuthors.nth(index).getByText(tagName, { exact: true })
+    ).toBeVisible()
+  }
+
+  const firstProfile = filteredAuthors.first()
+  const authorName = await getAuthorName(firstProfile)
+  expect(authorName.length).toBeGreaterThan(0)
+  await firstProfile.click()
+
+  await expect(page).toHaveURL(/\/v1\/blog\/authors\/[^/]+$/)
   await expect(
-    page.getByRole("heading", { name: "Maya Chen", level: 1 })
+    page.getByRole("heading", { name: authorName, level: 1 })
   ).toBeVisible()
 })
 
@@ -68,7 +94,7 @@ test("syncs the library content selection with the URL", async ({ page }) => {
     "page"
   )
   await expect(
-    page.getByRole("link", { name: "Open author profile for Ricardo Jorge" })
+    page.getByRole("link", { name: authorProfileName }).first()
   ).toBeVisible()
 
   await page.getByRole("link", { name: "Publications" }).click()

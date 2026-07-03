@@ -178,11 +178,18 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
               <AuthorByline authors={authors} />
               <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted-foreground">
-                <time dateTime={post.releaseDate}>
-                  {dateFormatter.format(
-                    new Date(`${post.releaseDate}T00:00:00Z`)
-                  )}
+                <time dateTime={post.created}>
+                  Created{" "}
+                  {dateFormatter.format(new Date(`${post.created}T00:00:00Z`))}
                 </time>
+                {post.updated && post.updated !== post.created ? (
+                  <time dateTime={post.updated}>
+                    Updated{" "}
+                    {dateFormatter.format(
+                      new Date(`${post.updated}T00:00:00Z`)
+                    )}
+                  </time>
+                ) : null}
                 <span>
                   {Math.max(
                     2,

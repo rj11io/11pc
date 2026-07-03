@@ -40,7 +40,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function PublicationPage({ params }: PublicationPageProps) {
+export default async function PublicationPage({
+  params,
+}: PublicationPageProps) {
   const { pubId } = await params
   const publication = getPublication(pubId)
   if (!publication) notFound()
@@ -55,12 +57,17 @@ export default async function PublicationPage({ params }: PublicationPageProps) 
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
-              <Link href={blogHref} className="rounded-sm underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <Link
+                href={blogHref}
+                className="rounded-sm underline-offset-4 hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              >
                 Library
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li aria-current="page" className="text-foreground">{publication.title}</li>
+            <li aria-current="page" className="text-foreground">
+              {publication.title}
+            </li>
           </ol>
         </nav>
 
@@ -71,12 +78,15 @@ export default async function PublicationPage({ params }: PublicationPageProps) 
           <div className="max-w-4xl">
             <div className="flex flex-wrap gap-2">
               {publication.isNew && (
-                <span className="rounded-full bg-primary/12 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                <span className="rounded-full bg-primary/12 px-2.5 py-1 text-xs font-semibold tracking-[0.14em] text-primary uppercase">
                   New issue
                 </span>
               )}
               {publication.tags.map((tag) => (
-                <span key={tag} className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground">
+                <span
+                  key={tag}
+                  className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground"
+                >
                   {tag}
                 </span>
               ))}
@@ -88,9 +98,21 @@ export default async function PublicationPage({ params }: PublicationPageProps) 
               {publication.description}
             </p>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-              <time dateTime={publication.releaseDate}>
-                Released {dateFormatter.format(new Date(`${publication.releaseDate}T00:00:00Z`))}
+              <time dateTime={publication.created}>
+                Created{" "}
+                {dateFormatter.format(
+                  new Date(`${publication.created}T00:00:00Z`)
+                )}
               </time>
+              {publication.updated &&
+              publication.updated !== publication.created ? (
+                <time dateTime={publication.updated}>
+                  Updated{" "}
+                  {dateFormatter.format(
+                    new Date(`${publication.updated}T00:00:00Z`)
+                  )}
+                </time>
+              ) : null}
               <span>{publication.posts.length} posts</span>
             </div>
           </div>
