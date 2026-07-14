@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/rj11io/11pc/compare/v1.3.0...v1.3.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* improvements ([084c4e9](https://github.com/rj11io/11pc/commit/084c4e974422b7cb808238d4910526d89ba2645c))
+
 # [1.3.0](https://github.com/rj11io/11pc/compare/v1.2.0...v1.3.0) (2026-07-03)
 
 
