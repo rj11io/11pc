@@ -2,7 +2,7 @@
 
 A personal blog. The writing lives in TypeScript under `content/`. A Next.js app in `v0/www/` imports it and builds every page ahead of time. No database, no CMS. Publishing is a commit and a build.
 
-The repository is public, under the Apache License 2.0. Fork it to run your own copy: [Run your own copy](https://blog.rj11.io/blog-platform-docs/run-your-own-copy) is the checklist.
+The repository is public, under the Apache License 2.0. Its retained platform manual is currently draft content and is available in development and preview builds.
 
 ## Repository layout
 
@@ -11,7 +11,7 @@ The repository is public, under the Apache License 2.0. Fork it to run your own 
 
 The dependency runs one way. Never import from `v0/www` inside `content/`.
 
-`content/registry.ts` holds eleven publications: Blog platform docs, Build an online presence, Project postmortems, Tech tutorials, Personal notes, AI benchmarks and analysis, AI product engineering, AI skills spotlight, AI coaching consultancy and advisory, AI tech forecast, and Research and development. The live site leaves out whichever are flagged as drafts.
+`content/registry.ts` currently holds one publication, Blog platform docs. The publication and all seventeen posts are drafts, so production starts with no published content.
 
 ## Run the site
 
@@ -51,6 +51,6 @@ Set `isDraft: true` on anything not ready. The dev server shows drafts with a Dr
 
 ## Documentation
 
-The platform documents itself, in the Blog platform docs publication under `content/publications/blog-platform-docs/`. Seventeen posts covering writing, extending, theming, operating, copying, and contributing. Start with [Working with the platform](https://blog.rj11.io/blog-platform-docs/working-with-the-platform), which maps the rest by task.
+The platform documents itself in the draft Blog platform docs publication under `content/publications/blog-platform-docs/`. Seventeen posts cover writing, extending, theming, operating, copying, and contributing. Start with [Working with the platform](./content/publications/blog-platform-docs/posts/working-with-the-platform.ts), which maps the rest by task.
 
 Working in this repo as a person or an agent: read [AGENTS.md](./AGENTS.md) first.

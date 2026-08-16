@@ -1,5 +1,7 @@
 # Markdown Components image sources
 
+The cover entry preserves inherited 11blog and 11brands provenance. That generation tooling is not bundled with 11pc.
+
 ## Cover image
 
 `markdown-reference-og-cover-v4.png` was generated in the main 11blog dark

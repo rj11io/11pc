@@ -1,11 +1,11 @@
 export const workingWithThePlatform = `
 # Working with the platform
 
-This publication documents 11blog, the platform this site runs on. Seventeen posts. This one is the map: what the platform is, what it is not, which post to read for each job.
+This draft publication documents 11pc, the platform this site runs on. Seventeen posts. This one is the map: what the platform is, what it is not, which post to read for each job.
 
-Want your own blog rather than to work on this one: start with [Build your own blog](/online-presence/build-your-own-blog).
+Want your own blog rather than to work on this one: the original 11blog essay [Build your own blog](https://blog.rj11.io/online-presence/build-your-own-blog) covers the available routes.
 
-## What 11blog is
+## What 11pc is
 
 A blog whose writing lives in TypeScript files, rendered by a Next.js application that reads them at build time.
 
@@ -14,7 +14,7 @@ That sentence explains most decisions documented here. No database, no admin scr
 Two halves:
 
 ~~~text
-11blog/
+11pc/
 ├── content/          the writing, its types, and its validator
 └── v0/www/           the website that renders it
 ~~~
@@ -88,7 +88,7 @@ The mistakes that cost the most time, pulled forward from the posts above.
 
 **Nothing checks the links you write in prose.** A link to a page that does not exist builds happily and returns a 404 to the reader. Open every internal link you write.
 
-**Renaming anything with a URL needs a redirect in the same change.** A publication ID, a post slug, and an author ID are all public addresses. This publication moved addresses while it was being written; the redirects for that move are in the config today.
+**Renaming anything with a URL needs a redirect in the same change.** A publication ID, a post slug, and an author ID are all public addresses. Once an address has shipped, its redirect belongs in the config permanently.
 
 ## Versions
 
@@ -98,13 +98,13 @@ For what changed and when, read the changelog in the repository, not any post he
 
 ## Running your own copy
 
-This blog's own repository is public, at [github.com/rj11io/11blog](https://github.com/rj11io/11blog), under the Apache License 2.0. Fork it and everything in this publication applies to your copy: same platform, same code. [Run your own copy](/blog-platform-docs/run-your-own-copy) is the checklist.
+This blog's own repository is public, at [github.com/rj11io/11pc](https://github.com/rj11io/11pc), under the Apache License 2.0. Fork it and everything in this publication applies to your copy: same platform, same code. [Run your own copy](/blog-platform-docs/run-your-own-copy) is the checklist.
 
-For the argument that running your own is worth the trouble: [Own your platform](/online-presence/own-your-platform).
+For the argument that running your own is worth the trouble, read the original 11blog essay [Own your platform](https://blog.rj11.io/online-presence/own-your-platform).
 
 ## How these posts are maintained
 
-One rule, and the reason this publication is worth trusting: **a meaningful change to the platform updates the documentation in the same commit.** These posts are published; a stale one is a public false statement.
+One rule, and the reason this publication is worth trusting: **a meaningful change to the platform updates the documentation in the same commit.** These posts are drafts today, but stale documentation would still make the eventual publication unreliable.
 
 Three habits hold that up:
 

@@ -7,7 +7,7 @@ import {
 
 import { ThemeToggle } from "./theme-toggle"
 
-const githubHref = "https://github.com/rj11io/11blog"
+const githubHref = "https://github.com/rj11io/11pc"
 
 function GitHubIcon() {
   return (
@@ -27,10 +27,10 @@ export function SiteHeader() {
         >
           <Link
             href="/"
-            aria-label="11blog home"
+            aria-label="11pc home"
             className="font-mono text-sm font-medium text-foreground transition hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
-            ~/11blog
+            ~/11pc
           </Link>
           <Link
             href={browseContentHref(defaultBrowseContentType)}
@@ -45,8 +45,8 @@ export function SiteHeader() {
             href={githubHref}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View 11blog on GitHub"
-            title="View 11blog on GitHub"
+            aria-label="View 11pc on GitHub"
+            title="View 11pc on GitHub"
             className="inline-flex size-9 items-center justify-center text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <GitHubIcon />

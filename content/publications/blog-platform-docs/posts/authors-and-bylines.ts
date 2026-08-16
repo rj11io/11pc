@@ -81,7 +81,7 @@ The count follows the posts and cannot disagree with them. Shown on the author c
 
 Ordering differs by surface:
 
-- Landing page: post count, most first, names break ties.
+- Landing page: authors with at least one visible post only, ordered by post count; names break ties.
 - Browse: same default, plus least posts, A-Z, and Z-A. See [Search, tags, and discovery](/blog-platform-docs/search-and-discovery).
 
 ## Bylines
@@ -140,7 +140,7 @@ The second form means the first check passed. In practice: an author was removed
 
 **Adding**: one entry in content/authors.ts. The page is generated on the next build, posts or not.
 
-An author with no posts still gets a page: details, a count of zero, an empty list, no message explaining the emptiness. Add the author in the same change as their first post.
+An author with no published posts still gets a page: details, a count of zero, and an explicit no-published-posts message. The landing page omits them; the author browse index retains them so the profile remains discoverable.
 
 **Renaming** the id changes the public address, because the id is the URL. Needs a redirect, same as renaming a publication:
 

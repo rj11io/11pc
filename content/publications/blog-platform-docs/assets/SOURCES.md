@@ -1,5 +1,7 @@
 # Blog platform docs cover and Open Graph images
 
+This inherited record preserves the original 11blog and 11brands provenance. Referenced generator paths are historical and are not bundled with 11pc.
+
 Generated brand assets, not photographs.
 
 The active v4 set was generated on 2026-08-11 in the main 11blog dark style,
@@ -76,11 +78,11 @@ recorded in `posts/markdown-reference/assets/SOURCES.md`.
 
 The previous v2 dark 11blog set remains for asset history and cached social
 previews. It was copied into the content directory on 2026-08-02 from the
-versioned set of record at `v0/branding/images/blog-platform/`, which also holds
+versioned set of record in the original 11blog repository at `v0/branding/images/blog-platform/`, which also holds
 the contact sheet and generator:
 
-- Source set: `v0/branding/images/blog-platform/`
-- Generator: `v0/branding/generators/og-covers-v5.py`
+- Original source set: `v0/branding/images/blog-platform/`
+- Original generator: `v0/branding/generators/og-covers-v5.py`
 - Post cover version: v2
 
 Every card was redrawn on 2026-08-02. Two things changed: the title now has a

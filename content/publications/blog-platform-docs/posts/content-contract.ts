@@ -6,12 +6,12 @@ The writing does not live inside the website. It lives in a directory next to it
 ## Two directories, one boundary
 
 ~~~text
-11blog/
+11pc/
 ├── content/          the writing and its rules
 └── v0/www/           the website that renders it
 ~~~
 
-v0 also holds branding assets, planning notes, and the cover-image skills. www is the part that renders.
+v0 currently contains only www, the presentation layer that renders the content.
 
 content has no dependency on Next.js, React, or anything in v0/www. Types, data, a small amount of derivation, a validator. Importable from a script, another framework, or a test with nothing else installed.
 

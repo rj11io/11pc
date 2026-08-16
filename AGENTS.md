@@ -22,7 +22,7 @@ Working notes for agents and new contributors. Find your task in the routing tab
 
 ## What this repository is
 
-11blog is a personal blog. The writing lives in TypeScript under `content/`. A Next.js app in `v0/www/` imports it and builds every page ahead of time. No database, no CMS. Publishing is a commit and a build. Hosted on Vercel. The repository is public, under the Apache License 2.0.
+11pc is a personal blog. The writing lives in TypeScript under `content/`. A Next.js app in `v0/www/` imports it and builds every page ahead of time. No database, no CMS. Publishing is a commit and a build. Hosted on Vercel. The repository is public, under the Apache License 2.0.
 
 Two directories matter:
 
@@ -37,9 +37,9 @@ A second, unrelated `AGENTS.md` sits at `v0/www/AGENTS.md`. It warns that this N
 
 The Blog platform docs publication documents this platform. It is the source of truth, written for whoever maintains the repo. Read the post covering a thing before changing that thing.
 
-All seventeen live in `content/publications/blog-platform-docs/posts/`. New here: start with Working with the platform. The table puts that entry post first, then follows editorial order.
+All seventeen draft posts live in `content/publications/blog-platform-docs/posts/`. New here: start with Working with the platform. The table puts that entry post first, then follows editorial order.
 
-| If you are… | Read | Published at |
+| If you are… | Read | Preview path |
 | --- | --- | --- |
 | New to the platform | `working-with-the-platform.ts` | `/blog-platform-docs/working-with-the-platform` |
 | Changing types, the registry, or the boundary | `content-contract.ts` | `/blog-platform-docs/content-contract` |
@@ -98,8 +98,7 @@ npm --prefix v0/www run dev
 - **Keep `created` dates ascending with array position** in `blog-platform-docs`. The listing sorts newest-first, so it reads as the reverse of the array. Adding a post means renumbering the dates around it, not appending at the end.
 - **Server components by default.** Add `"use client"` only for state or event handlers, and keep it at the leaves.
 - **Name a design token; never write a colour or a corner radius.**
-- **Covers come from 11brands, never drawn here.** Use the `11blog-generate-covers` skill under `v0/skills/`, then `11blog-verify-covers`. Copy assets byte-for-byte, never resize or re-encode, and record the run stamp in the nearest `SOURCES.md`.
-- **A cover title is short, and 37 characters is the budget.** It is drawn as one line that never wraps and never truncates: at 57 characters it runs off the card, silently, and the build still passes. The card title is not the post title. Record the string you drew in `SOURCES.md`; nothing else remembers it.
+- **Covers are optional imported assets.** Record their source and licence in the nearest `SOURCES.md`. No cover-generation tooling is bundled in this repository.
 - **Commit messages decide releases.** `fix:`/`perf:`/`revert:` cut a patch, `feat:` a minor, `chore:`/`docs:`/`style:` release nothing.
 
 ## Two things nothing validates
@@ -111,7 +110,7 @@ No command will tell you. Check by hand:
 
 ## When you change something, update the documentation
 
-**Any meaningful change to the platform must update the Blog platform docs publication in the same commit.** These posts are published. A stale one is a public false statement, not a private note.
+**Any meaningful change to the platform must update the Blog platform docs publication in the same commit.** The publication is currently draft, but it remains the platform's source of truth.
 
 Meaningful means it alters what someone else would need to know:
 
@@ -134,7 +133,7 @@ Meaningful means it alters what someone else would need to know:
 | The contribution workflow, or what a review checks | `contribute-to-the-platform.ts` |
 | How readers can support the blog | `supporting-the-platform.ts` |
 
-**No existing post covers what you changed: write one.** Follow `adding-content.ts`, take the next unused `postId` in the 4xx range, place it in the `posts` array where it belongs in the reading order, date it to keep the array ascending, and link it from related posts. Then add it to the routing table above, to the group lists in `working-with-the-platform.ts` (the reader-facing map), and bump the post-count sentences there, in the publication synopsis, and in `online-presence/posts/build-your-own-blog.ts`.
+**No existing post covers what you changed: write one.** Follow `adding-content.ts`, take the next unused `postId` in the 4xx range, place it in the `posts` array where it belongs in the reading order, date it to keep the array ascending, and link it from related posts. Then add it to the routing table above, to the group lists in `working-with-the-platform.ts` (the reader-facing map), and bump the post-count sentences there and in the publication synopsis.
 
 Three habits that keep the documentation honest:
 
@@ -152,6 +151,6 @@ Post bodies are TypeScript template strings, which constrains the writing. Follo
 - Escape backslashes: write `\\d` to show `\d`.
 - Start the body with a first-level heading matching the post title. The page strips it and renders the title itself.
 - Use second- through fifth-level headings for sections. They become the table of contents.
-- Write in the register at the top of this file. It applies to published prose as much as to chat.
+- Write in the register at the top of this file. It applies to draft and published prose as much as to chat.
 
-After writing, run `build` and open the page. Check the code blocks, the tables, and every internal link.
+After writing, run `build` for production validation, then open the page in development or a `SHOW_DRAFTS=1` preview. Check the code blocks, the tables, and every internal link.

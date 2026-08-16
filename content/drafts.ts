@@ -10,8 +10,8 @@
  *
  * SHOW_DRAFTS=1 overrides that for one case worth having. Setting it on a Vercel
  * preview environment publishes drafts at a preview address, so an unfinished
- * post can be handed to someone for a read without going anywhere near
- * blog.rj11.io. Never set it on the production environment.
+ * post can be handed to someone for a read without publishing it on the
+ * production site. Never set it on the production environment.
  *
  * Read at build time, which is all that is needed: pages are built ahead of
  * time, so nothing consults this value once the site is running.

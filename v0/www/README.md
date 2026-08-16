@@ -1,6 +1,6 @@
-# 11blog web app
+# 11pc web app
 
-The Next.js front end for 11blog. Renders the TypeScript content stored in the repository-level `content/` directory. Version zero of a presentation layer, expected to be replaceable: hence `v0`.
+The Next.js front end for 11pc. Renders the TypeScript content stored in the repository-level `content/` directory. Version zero of a presentation layer, expected to be replaceable: hence `v0`.
 
 Read [AGENTS.md](./AGENTS.md) in this directory before writing framework code. This Next.js version differs from what you may expect.
 

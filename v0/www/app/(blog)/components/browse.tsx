@@ -656,6 +656,12 @@ export function Browse({
       : contentType === "publications"
         ? filteredPublications.length
         : filteredAuthors.length
+  const sourceCount =
+    contentType === "posts"
+      ? posts.length
+      : contentType === "publications"
+        ? publications.length
+        : authors.length
 
   function pruneSelectedTags(nextType: ContentType) {
     const nextTags = getTags(
@@ -860,17 +866,30 @@ export function Browse({
         </div>
       ) : (
         <div className="mt-4 border border-dashed border-border px-6 py-16 text-center">
-          <p className="font-medium">No {contentType} match these filters.</p>
-          <button
-            type="button"
-            onClick={() => {
-              setQuery("")
-              setSelectedTags([])
-            }}
-            className="mt-3 text-sm font-semibold text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Clear search and tags
-          </button>
+          {sourceCount === 0 ? (
+            <>
+              <p className="font-medium">No {contentType} published yet.</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Check back after the first release.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-medium">
+                No {contentType} match these filters.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("")
+                  setSelectedTags([])
+                }}
+                className="mt-3 text-sm font-semibold text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Clear search and tags
+              </button>
+            </>
+          )}
         </div>
       )}
     </section>

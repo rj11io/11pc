@@ -18,9 +18,8 @@ import type {
 } from "@content/types"
 
 export const metadata: Metadata = {
-  title: "11blog",
-  description:
-    "Independent publications about projects, technology, AI, personal notes, publishing, and online presence.",
+  title: "11pc",
+  description: "A file-based personal blog for notes, essays, and series.",
 }
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -46,9 +45,11 @@ const featuredPublications = byNewest(
   publicationPreviews.filter((publication) => publication.isFeatured)
 ).slice(0, 2)
 const latestPublications = byNewest(publicationPreviews).slice(0, 4)
-const authors = [...authorPreviews].sort(
-  (a, b) => b.postCount - a.postCount || a.name.localeCompare(b.name)
-)
+const authors = [...authorPreviews]
+  .filter((author) => author.postCount > 0)
+  .sort((a, b) => b.postCount - a.postCount || a.name.localeCompare(b.name))
+const hasVisibleContent =
+  postPreviews.length > 0 || publicationPreviews.length > 0
 
 function postSeed(post: PostPreview) {
   return `${post.publicationId}-${post.postId}-${post.title}`
@@ -488,41 +489,56 @@ export default function HomePage() {
           className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16"
         >
           <div>
-            <Eyebrow>Independent publications</Eyebrow>
+            <Eyebrow>Independent publishing</Eyebrow>
             <h1
               id="hero-heading"
               className="mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.04em] text-balance sm:text-6xl lg:text-7xl"
             >
-              Field notes, kept in public.
+              Notes, essays, and series.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-pretty text-muted-foreground sm:text-xl sm:leading-9">
-              A collection of publications about projects, technology, AI,
-              personal notes, publishing, and online presence. Each one is a
-              short series, written slowly and left here to be read in any
-              order.
+              A file-based collection for ideas worth keeping and revisiting.
+              Topics will take shape as the writing does.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href={browseContentHref(defaultBrowseContentType)}
-                className="inline-flex h-11 items-center bg-primary px-5 text-sm font-semibold text-primary-foreground transition outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Browse the blog
-              </Link>
-              <Link
-                href={browseContentHref("publications")}
-                className="inline-flex h-11 items-center border border-border px-5 text-sm font-semibold transition outline-none hover:border-foreground/40 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Explore publications
-              </Link>
-            </div>
+            {hasVisibleContent ? (
+              <>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Link
+                    href={browseContentHref(defaultBrowseContentType)}
+                    className="inline-flex h-11 items-center bg-primary px-5 text-sm font-semibold text-primary-foreground transition outline-none hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Browse the blog
+                  </Link>
+                  <Link
+                    href={browseContentHref("publications")}
+                    className="inline-flex h-11 items-center border border-border px-5 text-sm font-semibold transition outline-none hover:border-foreground/40 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Explore publications
+                  </Link>
+                </div>
 
-            <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-border pt-6">
-              <Stat value={postPreviews.length} label="Posts" />
-              <Stat value={publicationPreviews.length} label="Publications" />
-              {/* DO NOT DELETE: Keep this commented to hide the Authors statistic from the home page UI. */}
-              {/* <Stat value={authorPreviews.length} label="Authors" /> */}
-            </dl>
+                <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-border pt-6">
+                  <Stat value={postPreviews.length} label="Posts" />
+                  <Stat
+                    value={publicationPreviews.length}
+                    label="Publications"
+                  />
+                  {/* DO NOT DELETE: Keep this commented to hide the Authors statistic from the home page UI. */}
+                  {/* <Stat value={authorPreviews.length} label="Authors" /> */}
+                </dl>
+              </>
+            ) : (
+              <div
+                role="status"
+                className="mt-8 border-l-2 border-primary py-1 pl-4"
+              >
+                <p className="font-semibold">Nothing published yet.</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  Drafts are in progress. Check back later.
+                </p>
+              </div>
+            )}
           </div>
 
           <HeroArt posts={latestPosts} />
@@ -564,26 +580,28 @@ export default function HomePage() {
           </section>
         )}
 
-        <section
-          aria-labelledby="latest-posts-heading"
-          className="mt-20 lg:mt-28"
-        >
-          <SectionHeading
-            id="latest-posts-heading"
-            eyebrow="Recently published"
-            title="Latest posts"
-            actionHref={browseContentHref("posts")}
-            actionLabel="All posts"
-          />
-          <div className="mt-2 divide-y divide-border">
-            {latestPosts.map((post) => (
-              <PostRow
-                key={`${post.publicationId}-${post.postId}`}
-                post={post}
-              />
-            ))}
-          </div>
-        </section>
+        {latestPosts.length > 0 && (
+          <section
+            aria-labelledby="latest-posts-heading"
+            className="mt-20 lg:mt-28"
+          >
+            <SectionHeading
+              id="latest-posts-heading"
+              eyebrow="Recently published"
+              title="Latest posts"
+              actionHref={browseContentHref("posts")}
+              actionLabel="All posts"
+            />
+            <div className="mt-2 divide-y divide-border">
+              {latestPosts.map((post) => (
+                <PostRow
+                  key={`${post.publicationId}-${post.postId}`}
+                  post={post}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         {featuredPublications.length > 0 && (
           <section
@@ -614,42 +632,49 @@ export default function HomePage() {
           </section>
         )}
 
-        <section
-          aria-labelledby="latest-publications-heading"
-          className="mt-20 lg:mt-28"
-        >
-          <SectionHeading
-            id="latest-publications-heading"
-            eyebrow="The shelf"
-            title="Latest publications"
-            actionHref={browseContentHref("publications")}
-            actionLabel="All publications"
-          />
-          <div className="mt-2 divide-y divide-border">
-            {latestPublications.map((publication) => (
-              <PublicationRow
-                key={publication.pubId}
-                publication={publication}
-              />
-            ))}
-          </div>
-        </section>
+        {latestPublications.length > 0 && (
+          <section
+            aria-labelledby="latest-publications-heading"
+            className="mt-20 lg:mt-28"
+          >
+            <SectionHeading
+              id="latest-publications-heading"
+              eyebrow="The shelf"
+              title="Latest publications"
+              actionHref={browseContentHref("publications")}
+              actionLabel="All publications"
+            />
+            <div className="mt-2 divide-y divide-border">
+              {latestPublications.map((publication) => (
+                <PublicationRow
+                  key={publication.pubId}
+                  publication={publication}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
-        <section aria-labelledby="authors-heading" className="mt-20 lg:mt-28">
-          <SectionHeading
-            id="authors-heading"
-            eyebrow="Who writes here"
-            title="Authors"
-            description="A short list of authors, and everything each of them has written."
-            actionHref={browseContentHref("authors")}
-            actionLabel="All authors"
-          />
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {authors.map((author) => (
-              <AuthorCard key={author.id} author={author} />
-            ))}
-          </div>
-        </section>
+        {authors.length > 0 && (
+          <section
+            aria-labelledby="authors-heading"
+            className="mt-20 lg:mt-28"
+          >
+            <SectionHeading
+              id="authors-heading"
+              eyebrow="Who writes here"
+              title="Authors"
+              description="A short list of authors, and everything each of them has written."
+              actionHref={browseContentHref("authors")}
+              actionLabel="All authors"
+            />
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {authors.map((author) => (
+                <AuthorCard key={author.id} author={author} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   )

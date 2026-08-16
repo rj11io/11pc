@@ -15,6 +15,7 @@ All three built from the registry at build time, same as the pages. Consequences
 
 - They list what the site serves, nothing else. Drafts are gone before any of them is generated.
 - Adding or removing a post updates all three on the next build. Nothing to remember.
+- With no published posts, the feed remains valid but has no items. The sitemap retains the landing, browse, and author pages while omitting publication and post routes.
 
 See [The content contract](/blog-platform-docs/content-contract) for why the registry is the only door.
 

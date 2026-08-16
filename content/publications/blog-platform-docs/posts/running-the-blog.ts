@@ -50,7 +50,7 @@ SHOW_DRAFTS=1 overrides the production behaviour:
 SHOW_DRAFTS=1 npm run build
 ~~~
 
-Use case: a Vercel preview environment. Set the variable there, drafts publish at the preview address, an unfinished post can be handed out for a read without touching blog.rj11.io. **Never set it on the production environment.** Flag defined in content/drafts.ts. Filter behaviour: [Adding a publication or post](/blog-platform-docs/adding-content).
+Use case: a Vercel preview environment. Set the variable there, drafts publish at the preview address, and an unfinished post can be handed out for a read without touching the production site. **Never set it on the production environment.** Flag defined in content/drafts.ts. Filter behaviour: [Adding a publication or post](/blog-platform-docs/adding-content).
 
 ## The checks
 

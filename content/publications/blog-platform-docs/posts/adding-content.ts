@@ -365,27 +365,9 @@ A coverImage does two jobs: the cover shown on the site, and the Open Graph imag
 
 Draw covers at 1200 by 630 when possible. That is the frame most social networks show and the ratio the page-top banner uses, so a cover at that size shows whole rather than cropped.
 
-For a branded cover, post or publication alike, use the 11blog-generate-covers skill under v0/skills/. It generates the source in the separate 11brands checkout configured by the gitignored .env.brand-assets.local file, then copies a new versioned image into the right assets directory: the publication's for a single-file post, the post's own for a directory module. Several covers in one style: pass every title in one run, producing one generation folder and one manifest for the set instead of one folder per file. Run the 11blog-verify-covers skill afterwards over the same set: it checks every consumer is byte-identical to its source, is 1200 by 630, wired into a record, written down in SOURCES.md, and drawn with a title inside the budget below. Record the shared run stamp in the nearest SOURCES.md files. Keep older versioned covers: shared previews cache image URLs.
+No cover-generation or verification tooling is bundled. Create or source the asset separately, import it from the content directory, and record its origin, licence, dimensions, and any text drawn into it in the nearest SOURCES.md. Keep older versioned covers when a public page has used them because social networks cache image URLs.
 
-#### The title is drawn into the picture, and it has a budget
-
-The generator draws a cover title as one line. It never wraps, and it is never truncated. It shrinks the font from 42pt down to 28pt trying to fit, and if the text still does not fit it draws it at 28pt anyway and lets it run off both edges of the card.
-
-That failure is silent in every direction. Nothing errors, the build passes, and the verify skill's byte-comparison passes too, because an overflowing card is still a faithful copy of an overflowing source. The only way to catch it is to look at the image.
-
-So the budget, measured against the card's font:
-
-| Title length | What happens |
-| --- | --- |
-| 37 characters or fewer | Draws at the full 42pt |
-| 38 to 56 | Fits, at a smaller size |
-| 57 or more | Runs off the card |
-
-**The card title is not the post title.** It is chosen for the card, and it is short by default: a record's own title is used verbatim only when it already fits. Shorten by dropping leading articles, trailing qualifiers, and subtitle clauses, keeping the words a reader would search for. A post titled "Yes, the current job hunting landscape is a mess, here's how you can play around it" carries a card reading "2025 job hunting landscape". Renaming the post is a separate decision; the cover is not a reason to do it.
-
-Record the title you drew in SOURCES.md, in the Title drawn column. Nothing else in the repository remembers it, so without that record a later regeneration guesses a different short title and quietly changes the card.
-
-Other shapes still appear and a cover must survive them: the sixteen-by-nine card in a list, and the square thumbnail beside a row or a previous and next link. Both take a slice out of the middle. Keep anything that must stay readable, the title above all, near the centre; treat the outer edges as decoration you can afford to lose.
+Other shapes still appear and a cover must survive them: the sixteen-by-nine card in a list, and the square thumbnail beside a row or a previous and next link. Both take a slice out of the middle. Keep anything that must stay readable near the centre; treat the outer edges as decoration you can afford to lose. Inspect the image at each crop because the build validates the source string, not the composition.
 
 A link preview needs an absolute address. The site supplies one through metadataBase in the root layout, set to the production domain. Without it the framework falls back to localhost and every preview points at a machine not on the internet.
 
@@ -412,7 +394,7 @@ Adding a post and adding a publication are different jobs. Use the matching chec
 5. Put body images and their source record in the modular post's assets directory. A legacy post's cover goes in the publication's assets directory instead (a legacy post has no directory of its own).
 6. Put named single-image and image-list configurations in the post's .images.ts file when needed.
 7. Give configured images dimensions, useful alt text, and separate thumbnail and lightbox sources where practical.
-8. Add a coverImage, imported rather than written as a path. It doubles as the post's link preview.
+8. Optionally add a coverImage, imported rather than written as a path. It doubles as the post's link preview.
 9. Check component syntax against the [Markdown reference](/blog-platform-docs/markdown-reference).
 10. Add the post to its publication's posts array, in reading position.
 11. Set isDraft to true if the post is not ready to be read; the build then leaves it out. Set isFeatured to false while it is a draft; the two together fail validation.
@@ -423,7 +405,7 @@ Adding a post and adding a publication are different jobs. Use the matching chec
 1. Create content/publications/publication-id/index.ts: lowercase kebab-case directory name, matching pubId.
 2. Use an unused positive relId, a pubId that is not authors, browse, or publications, and valid ISO dates.
 3. Write the title, description, and tags. Add the optional synopsis and editorNotes if the publication needs them.
-4. Add a coverImage imported from the publication's assets directory, with a SOURCES.md recording where it came from. The 11blog-generate-covers and 11blog-verify-covers skills under v0/skills/ produce and check one.
+4. Optionally add a coverImage imported from the publication's assets directory, with a SOURCES.md recording where it came from.
 5. Add at least one post, following the post checklist above. Validation rejects a published publication with no posts.
 6. Import the publication in content/registry.ts and add it to the authoredPublications array.
 7. Set isDraft to true if the publication is not ready. Same if every post in it is still a draft; validation requires this rather than suggests it.

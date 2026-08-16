@@ -149,77 +149,81 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
         </header>
 
         <section className="mt-10" aria-labelledby="author-posts-heading">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-                Writing
-              </p>
-              <h2
-                id="author-posts-heading"
-                className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
-              >
-                Latest posts by {author.displayName}
-              </h2>
-            </div>
-          </div>
+          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            Writing
+          </p>
+          <h2
+            id="author-posts-heading"
+            className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
+          >
+            {posts.length > 0
+              ? `Latest posts by ${author.displayName}`
+              : `No published posts by ${author.displayName}`}
+          </h2>
 
-          <div className="mt-5 grid gap-3">
-            {posts.map((post) => (
-              <article
-                key={`${post.publicationId}-${post.postId}`}
-                className="group border border-border bg-card p-5 transition hover:border-foreground/40 hover:bg-muted/30 sm:p-6"
-              >
-                <Link
-                  href={post.href}
-                  className="flex gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-6"
+          {posts.length > 0 ? (
+            <div className="mt-5 grid gap-3">
+              {posts.map((post) => (
+                <article
+                  key={`${post.publicationId}-${post.postId}`}
+                  className="group border border-border bg-card p-5 transition hover:border-foreground/40 hover:bg-muted/30 sm:p-6"
                 >
-                  <div className="w-20 shrink-0 sm:w-28">
-                    <CoverImage
-                      src={post.coverImage}
-                      seed={`${post.publicationId}-${post.postId}-${post.title}`}
-                      monogram={coverMonogram(post.publicationTitle)}
-                      aspect="thumb"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-[0.14em] text-primary uppercase">
-                      <span>{post.publicationTitle}</span>
-                      <span
-                        aria-hidden="true"
-                        className="text-muted-foreground"
-                      >
-                        ·
-                      </span>
-                      <time dateTime={post.created}>
-                        {dateFormatter.format(
-                          new Date(`${post.created}T00:00:00Z`)
-                        )}
-                      </time>
-                      {post.updated && post.updated !== post.created && (
-                        <time
+                  <Link
+                    href={post.href}
+                    className="flex gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:gap-6"
+                  >
+                    <div className="w-20 shrink-0 sm:w-28">
+                      <CoverImage
+                        src={post.coverImage}
+                        seed={`${post.publicationId}-${post.postId}-${post.title}`}
+                        monogram={coverMonogram(post.publicationTitle)}
+                        aspect="thumb"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-[0.14em] text-primary uppercase">
+                        <span>{post.publicationTitle}</span>
+                        <span
+                          aria-hidden="true"
                           className="text-muted-foreground"
-                          dateTime={post.updated}
                         >
-                          Updated{" "}
+                          ·
+                        </span>
+                        <time dateTime={post.created}>
                           {dateFormatter.format(
-                            new Date(`${post.updated}T00:00:00Z`)
+                            new Date(`${post.created}T00:00:00Z`)
                           )}
                         </time>
-                      )}
+                        {post.updated && post.updated !== post.created && (
+                          <time
+                            className="text-muted-foreground"
+                            dateTime={post.updated}
+                          >
+                            Updated{" "}
+                            {dateFormatter.format(
+                              new Date(`${post.updated}T00:00:00Z`)
+                            )}
+                          </time>
+                        )}
+                      </div>
+                      <h3 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
+                        {post.title}
+                      </h3>
+                      {post.excerpt ? (
+                        <p className="mt-2 max-w-3xl leading-7 text-muted-foreground">
+                          {post.excerpt}
+                        </p>
+                      ) : null}
                     </div>
-                    <h3 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
-                      {post.title}
-                    </h3>
-                    {post.excerpt ? (
-                      <p className="mt-2 max-w-3xl leading-7 text-muted-foreground">
-                        {post.excerpt}
-                      </p>
-                    ) : null}
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
+              Draft work is not listed on the production site.
+            </p>
+          )}
         </section>
       </div>
     </main>

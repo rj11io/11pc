@@ -49,13 +49,13 @@ export const authorSortOptions: ReadonlyArray<{
  * posts it has.
  */
 export const useContentSortOrder = createPersistedPreference<ContentSortOrder>(
-  "11blog:content-sort",
+  "11pc:content-sort",
   contentSortOptions.map((option) => option.value),
   "newest"
 )
 
 export const useAuthorSortOrder = createPersistedPreference<AuthorSortOrder>(
-  "11blog:author-sort",
+  "11pc:author-sort",
   authorSortOptions.map((option) => option.value),
   "most-posts"
 )

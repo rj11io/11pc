@@ -1,16 +1,6 @@
 import { authors } from "./authors"
 import { includeDrafts } from "./drafts"
-import { aiBenchmarks } from "./publications/ai-benchmarks"
-import { aiCoachingAdvisory } from "./publications/ai-coaching-advisory"
-import { aiProductEngineering } from "./publications/ai-product-engineering"
-import { aiSkillsSpotlight } from "./publications/ai-skills-spotlight"
-import { aiTechForecast } from "./publications/ai-tech-forecast"
 import { blogPlatformDocs } from "./publications/blog-platform-docs"
-import { onlinePresence } from "./publications/online-presence"
-import { personalNotes } from "./publications/personal-notes"
-import { projectPostmortems } from "./publications/project-postmortems"
-import { researchAndDevelopment } from "./publications/rnd"
-import { techTutorials } from "./publications/tech-tutorials"
 import { authorHref, postHref, publicationHref } from "./routes"
 import type {
   Author,
@@ -29,19 +19,7 @@ import { validatePublications } from "./validation"
  * the list the validator checks, and the only thing that reads it is the filter
  * below.
  */
-const authoredPublications: Publication[] = [
-  blogPlatformDocs,
-  onlinePresence,
-  projectPostmortems,
-  techTutorials,
-  personalNotes,
-  aiBenchmarks,
-  aiProductEngineering,
-  aiSkillsSpotlight,
-  aiCoachingAdvisory,
-  aiTechForecast,
-  researchAndDevelopment,
-]
+const authoredPublications: Publication[] = [blogPlatformDocs]
 
 export const blogAuthors: Author[] = authors
 

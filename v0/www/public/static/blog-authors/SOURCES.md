@@ -1,5 +1,7 @@
 # Author photograph sources
 
+The 11ai icon entry preserves inherited 11blog and 11brands provenance. That generation tooling is not bundled with 11pc.
+
 Files here are addressed root-relative as /static/blog-authors/<file> from
 content/authors.ts. Nothing validates these paths: after changing one, open an
 author page and check the image loaded.

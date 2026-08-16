@@ -12,7 +12,7 @@ const viewModes: readonly ViewMode[] = ["list", "cards"]
  * inside a publication.
  */
 export const useViewMode = createPersistedPreference<ViewMode>(
-  "11blog:view-mode",
+  "11pc:view-mode",
   viewModes,
   "cards"
 )

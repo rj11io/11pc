@@ -21,7 +21,7 @@ All three built ahead of time, like every page on the blog. Each has its own pag
 
 Nothing else about the view is in the address. Search text and selected tags live in the page and vanish on leaving. A filtered view cannot be sent to anyone, only the content type can. Worth knowing before telling someone to "search for X on the browse page".
 
-Two things persist: card-or-list layout and sort order. Layout is stored in the browser under 11blog:view-mode and shared by every list on the site: choosing list on the browse page also gives list inside a publication, this visit and the next. Sort choices are stored the same way (see Sorting below). Reader preferences, not shareable view state, so they live in the browser, not the address.
+Two things persist: card-or-list layout and sort order. Layout is stored in the browser under 11pc:view-mode and shared by every list on the site: choosing list on the browse page also gives list inside a publication, this visit and the next. Sort choices are stored the same way (see Sorting below). Reader preferences, not shareable view state, so they live in the browser, not the address.
 
 Pages are built ahead of time, so the server cannot know the preference: a stored choice of list draws briefly as cards before the page corrects itself. See [How pages are rendered](/blog-platform-docs/rendering-model).
 
@@ -93,7 +93,7 @@ Authors keep a separate remembered choice. Changing author order does not distur
 
 ### Where the choice lives
 
-Stored in the browser under 11blog:content-sort and 11blog:author-sort, alongside the layout preference at 11blog:view-mode. All three run through the same small store: shared by every list on the page, survives navigation, follows along in other tabs.
+Stored in the browser under 11pc:content-sort and 11pc:author-sort, alongside the layout preference at 11pc:view-mode. All three run through the same small store: shared by every list on the page, survives navigation, follows along in other tabs.
 
 Pages are built ahead of time, so the server cannot know any of them: a stored choice shows for one frame as the default before the page corrects itself. See [How pages are rendered](/blog-platform-docs/rendering-model).
 

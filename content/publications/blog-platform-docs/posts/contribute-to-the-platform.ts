@@ -1,7 +1,7 @@
 export const contributeToThePlatform = `
 # Contribute to the platform
 
-Developed in the open at [github.com/rj11io/11blog](https://github.com/rj11io/11blog). Two contribution shapes: writing (new post or correction), code (platform change). Both arrive as pull requests. This post: fork to merged.
+Developed in the open at [github.com/rj11io/11pc](https://github.com/rj11io/11pc). Two contribution shapes: writing (new post or correction), code (platform change). Both arrive as pull requests. This post: fork to merged.
 
 ## The shortest contribution
 
@@ -42,7 +42,7 @@ Read first, then change. Each platform part has a documenting post. [Working wit
 
 Two rules above the rest.
 
-- **Update the documentation in the same commit.** A meaningful platform change updates the post describing it. Posts are published: a stale one is a public false statement, not a private note. No post covers the change: write one.
+- **Update the documentation in the same commit.** A meaningful platform change updates the post describing it. The manual is draft today but remains the source of truth. No post covers the change: write one.
 - **Your commit message decides the release.** Pipeline reads Conventional Commits: fix: cuts a patch, feat: cuts a minor, chore: and docs: release nothing. The summary line becomes a changelog entry: write it as one.
 
 ## What a review looks at
