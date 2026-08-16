@@ -11,7 +11,7 @@
  * gives the right answer on a preview deployment: a link shared from a preview
  * points at the live post, not at a URL that will disappear.
  */
-export const siteOrigin = "https://blog.rj11.io"
+export const siteOrigin = "https://pc.rj11.io"
 
 /**
  * Turns a root-relative path into a full address.
