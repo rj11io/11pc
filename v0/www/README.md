@@ -1,42 +1,44 @@
-# v0 app boilerplate
+# 11blog web app
 
-The reusable Next.js and shadcn/ui starter for v0 benchmark apps. It includes
-TypeScript, Tailwind CSS, theming, path aliases, and the shared UI component
-set.
+The Next.js front end for 11blog. Renders the TypeScript content stored in the repository-level `content/` directory. Version zero of a presentation layer, expected to be replaceable: hence `v0`.
 
-## Local development
+Read [AGENTS.md](./AGENTS.md) in this directory before writing framework code. This Next.js version differs from what you may expect.
 
-This app requires Node.js and npm. It does not currently use environment
-variables.
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Commands
+Run every command from `v0/www`. Available scripts:
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the Next.js development server |
-| `npm run build` | Create a production build |
-| `npm run start` | Serve the production build |
-| `npm run lint` | Run ESLint |
-| `npm run typecheck` | Check TypeScript without emitting files |
-| `npm run format` | Format TypeScript and TSX files with Prettier |
-
-## Adding components
-
-The shadcn/ui configuration writes components to `components/ui/`:
-
-```bash
-npx shadcn@latest add <component>
+```text
+npm run lint       # Check the app with ESLint
+npm run typecheck  # Run TypeScript without emitting files
+npm run build      # Create a production build
+npm run start      # Serve the production build
+npm run format     # Format TypeScript and TSX files
 ```
 
-## Using components
+`typecheck` never runs your code, so it cannot catch a content error. `build` executes the registry and its validator, so it is the only command that judges content.
 
-To use the components in your app, import them as follows:
+## Routes
 
-```tsx
-import { Button } from "@/components/ui/button";
-```
+- `/`: the landing page. Featured and recent posts, featured and recent publications, authors.
+- `/browse/[content]`: the searchable indexes, one per content type: `posts`, `publications`, `authors`. Any other value is a 404. `/browse` alone redirects to `/browse/posts`, via a rule in `next.config.ts`.
+- `/[pubId]`: one publication.
+- `/[pubId]/[postId]`: one post, addressed by slug, or by numeric id when it has no slug.
+- `/authors/[authorId]`: one author and their posts.
+- `/feed.xml`, `/sitemap.xml`, `/robots.txt`: generated from the registry at build time.
+- `not-found.tsx`: the styled 404 every unknown address lands on.
+
+The four content routes list their addresses with `generateStaticParams` and set `dynamicParams = false`, so an address that was not listed is a 404 rather than rendered on demand. Drafts are already filtered out of the registry, so a draft has no address at all.
+
+## Content
+
+Content lives outside this app, in `../../content`. The `@content/*` alias in `tsconfig.json` exposes it. Add authors, publications, and posts there, never here.
+
+Pages import from `content/registry.ts` only. Never import a publication file directly. If a page needs something the registry does not expose, add a derived export there.
+
+Local UI components sit in `components/ui/`, shared helpers in `lib/`.

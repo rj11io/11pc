@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@content/*": ["../../content/*"],
+      "@root/package.json": ["../../package.json"]
     }
   },
   "include": [
@@ -28,6 +30,7 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.mts",
+    "../../content/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

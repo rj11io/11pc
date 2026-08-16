@@ -1,0 +1,16 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 160 160"
+  role="img"
+  aria-labelledby="mark-title mark-description"
+>
+  <title id="mark-title">11blog mark</title>
+  <desc id="mark-description">
+    Two geometric number ones followed by a green signal square.
+  </desc>
+
+  <rect width="160" height="160" fill="#0A0A0A" />
+  <path fill="#FAFAFA" d="M18 52 42 28h22v104H40V62L28 72 18 52Z" />
+  <path fill="#FAFAFA" d="m74 52 24-24h22v104H96V62L84 72 74 52Z" />
+  <path fill="#2BC88F" d="M128 118h14v14h-14z" />
+</svg>
