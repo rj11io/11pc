@@ -1,4 +1,4 @@
-# 11blog
+# 11pc
 
 A personal blog. The writing lives in TypeScript under `content/`. A Next.js app in `v0/www/` imports it and builds every page ahead of time. No database, no CMS. Publishing is a commit and a build.
 
