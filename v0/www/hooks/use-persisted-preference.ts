@@ -4,8 +4,9 @@ import * as React from "react"
 
 /**
  * Builds a hook for one small reader preference that outlives the page: which
- * layout, which sort order. Three of these exist, so the store lives here once
- * rather than being copied per preference.
+ * layout, which sort order, or whether one browse view shows only bookmarks.
+ * Several of these exist, so the store lives here once rather than being copied
+ * per preference.
  *
  * What each instance provides:
  *

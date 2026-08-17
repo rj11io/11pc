@@ -28,7 +28,7 @@ The trade: publishing requires a build. No way to add a post to a running site.
 
 Components run on the server unless marked. Starting a file with "use client" pulls it, plus everything it imports, into the code sent to the browser.
 
-Twenty-one hand-written entries opt in, each with a reason:
+Twenty-two hand-written entries opt in, each with a reason:
 
 | File | Why it runs in the browser |
 | --- | --- |
@@ -38,7 +38,7 @@ Twenty-one hand-written entries opt in, each with a reason:
 | copy-code-button.tsx | Writes to the clipboard |
 | copy-link-button.tsx | Writes to the clipboard, in the share row |
 | native-share-button.tsx | Opens the device share sheet, where there is one |
-| bookmark-button.tsx | Saves or removes one publication or post |
+| bookmark-button.tsx | Bookmarks or removes one author, publication, or post |
 | bookmarks-provider.tsx | Scopes the LSDB client to bookmark-enabled islands |
 | markdown-image.tsx | Opens the fullscreen viewer |
 | cover-image.tsx | Tracks whether a photo loaded, and opens the viewer |
@@ -52,6 +52,7 @@ Twenty-one hand-written entries opt in, each with a reason:
 | hooks/use-view-mode.ts | The list-or-cards choice |
 | hooks/use-sort-order.ts | The content and author sort choices |
 | hooks/use-mounted.ts | Answers whether the first render is over |
+| hooks/use-bookmarked-filter.ts | Remembers Bookmarked separately for each browse content type |
 | hooks/use-bookmarks.ts | Reads, writes, and subscribes to browser-local bookmarks |
 
 Vendored components under components/ui carry the same directive (generator output). Most are never imported, so never ship. One does: the dialog, which the image viewer is built on. See [Design tokens and theming](/blog-platform-docs/design-tokens) for what that directory is.
@@ -159,13 +160,13 @@ The browse page shows one of three content types, chosen by path segment: /brows
 
 It used to work the other way. The content type was a query parameter, read in the browser with a hook that suspends, so the page needed a Suspense boundary or the build refused to prerender. Moving the choice into the path removed the hook, and the boundary went with it. Rule: a value the server already knows should be resolved on the server and handed down.
 
-The rest of the browse state (search text, selected tags, sort) is ordinary component state, not in the address.
+The remaining per-visit browse state (search text and selected tags) is ordinary component state, not in the address.
 
 ## A reader preference the server cannot know
 
-Three pieces of view state outlive the page: the card-or-list layout, how posts and publications are sorted, and how authors are sorted. Each lives in the browser's local storage, read through the same small store: built by v0/www/hooks/use-persisted-preference.ts, configured in use-view-mode.ts and use-sort-order.ts.
+Six pieces of view state outlive the page: the card-or-list layout, how posts and publications are sorted, how authors are sorted, and one Bookmarked toggle for each of the three browse content types. Each lives in the browser's local storage, read through the same small store: built by v0/www/hooks/use-persisted-preference.ts, then configured by the view, sort, and bookmarked-filter hooks.
 
-Each is shared by every list on the page, so choosing a layout or order on the browse page also applies inside a publication. Authors keep their own sort because none of its options mean anything for a post.
+Layout and content sorting are shared by every relevant list, so choosing either on the browse page also applies inside a publication. Authors keep their own sort because none of its options mean anything for a post. Bookmarked is also separate: posts, publications, and authors each restore their own last toggle state.
 
 The same reasoning applies to any preference added next.
 
@@ -197,21 +198,21 @@ Note what is passed in: previews, not full posts. Everything handed to a browser
 
 ## Bookmarks are local reader data
 
-Publications and posts can be bookmarked without changing the content registry. A bookmark is reader-owned browser data, stored by @rj11io/lsdb-react in the bookmarks-v1 collection under this local-storage key:
+Authors, publications, and posts can be bookmarked without changing the content registry. A bookmark is reader-owned browser data, stored by @rj11io/lsdb-react in the bookmarks-v1 collection under this local-storage key:
 
 ~~~text
 lsdb:11pc:bookmarks-v1
 ~~~
 
-Each record carries its generated identifier, target type, stable target key, current address, and save time. Publication keys use publication: followed by the publication ID. Post keys use post: followed by the publication ID and numeric post ID. The numeric ID stays stable if a post slug changes; the address remains available for a future saved-items view.
+Each record carries its generated identifier, target type, stable target key, current address, and save time. Author keys use author: followed by the author ID. Publication keys use publication: followed by the publication ID. Post keys use post: followed by the publication ID and numeric post ID. The numeric ID stays stable if a post slug changes; the address remains available for a future bookmarks view.
 
-Only detail pages write bookmarks. The browse page reads the same collection to offer Saved only for posts and publications. Cards stay ordinary links, and authors are not bookmarkable.
+Only detail pages write bookmarks. The browse page reads the same collection to offer Bookmarked for all three content types. Cards stay ordinary links.
 
 The provider is not mounted at the root. A detail-page button owns one small provider, while the browse route wraps only its browser component. That keeps LSDB out of pages that do not use it and preserves the server-component boundary around the rest of the site.
 
 Construction is safe during prerendering, but storage access waits for the browser. The server and hydration render bookmark controls in their neutral disabled state; the hook reads the collection after mounting and then enables them. Writes notify other consumers on the page and storage events update other tabs.
 
-The integration is fail-soft. Records are checked before use and duplicate target keys collapse to one visible bookmark. Malformed or invalid stored data is ignored and treated as empty. If local storage is blocked or a write is refused, the bookmark controls become unavailable and Saved only stops applying. Routes, content, search, feeds, and static generation continue unchanged.
+The integration is fail-soft. Records are checked before use and duplicate target keys collapse to one visible bookmark. Malformed or invalid stored data is ignored and treated as empty. If local storage is blocked or a write is refused, the bookmark controls become unavailable and Bookmarked stops applying. Routes, content, search, feeds, and static generation continue unchanged.
 
 ## Markdown is parsed twice
 

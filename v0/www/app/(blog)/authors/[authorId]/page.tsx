@@ -3,10 +3,16 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { BookmarkButton } from "@/app/components/bookmark-button"
 import { CoverImage } from "@/components/media/cover-image"
 import { coverMonogram } from "@/components/media/cover-monogram"
+import { authorBookmarkKey } from "@/lib/bookmarks"
 import { blogAuthors, getAuthor, getPostsByAuthor } from "@content/registry"
-import { browseContentHref, defaultBrowseContentType } from "@content/routes"
+import {
+  authorHref,
+  browseContentHref,
+  defaultBrowseContentType,
+} from "@content/routes"
 
 type AuthorPageProps = {
   params: Promise<{ authorId: string }>
@@ -96,9 +102,17 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           )}
 
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-              Author profile
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+                Author profile
+              </p>
+              <BookmarkButton
+                targetType="author"
+                targetKey={authorBookmarkKey(author.id)}
+                href={authorHref(author.id)}
+                title={author.name}
+              />
+            </div>
             <h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">
               {author.name}
             </h1>

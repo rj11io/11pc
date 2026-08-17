@@ -13,9 +13,14 @@ import * as React from "react"
 
 import { CoverImage } from "@/components/media/cover-image"
 import { coverMonogram } from "@/components/media/cover-monogram"
+import { useBookmarkedFilter } from "@/hooks/use-bookmarked-filter"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 import { joinAuthorNames } from "@/lib/authors"
-import { postBookmarkKey, publicationBookmarkKey } from "@/lib/bookmarks"
+import {
+  authorBookmarkKey,
+  postBookmarkKey,
+  publicationBookmarkKey,
+} from "@/lib/bookmarks"
 import {
   authorSortOptions,
   contentSortOptions,
@@ -559,9 +564,9 @@ export function Browse({
   const [query, setQuery] = React.useState("")
   const [selectedTags, setSelectedTags] = React.useState<string[]>([])
   const [filtersOpen, setFiltersOpen] = React.useState(false)
-  const [savedOnly, setSavedOnly] = React.useState(false)
+  const [bookmarkedOnly, setBookmarkedOnly] = useBookmarkedFilter(contentType)
   const { bookmarkedKeys, status: bookmarksStatus } = useBookmarks()
-  const bookmarkFilterActive = savedOnly && bookmarksStatus === "ready"
+  const bookmarkFilterActive = bookmarkedOnly && bookmarksStatus === "ready"
 
   const availableTags = React.useMemo(
     () =>
@@ -659,11 +664,21 @@ export function Browse({
         .toLocaleLowerCase()
       return (
         (!needle || searchText.includes(needle)) &&
-        matchesTags(author.tags, activeSelectedTags)
+        matchesTags(author.tags, activeSelectedTags) &&
+        (!bookmarkFilterActive ||
+          bookmarkedKeys.has(authorBookmarkKey(author.id)))
       )
     })
     return sortAuthors(filtered, authorSort)
-  }, [activeSelectedTags, authorSort, authors, contentType, query])
+  }, [
+    activeSelectedTags,
+    authorSort,
+    authors,
+    bookmarkedKeys,
+    bookmarkFilterActive,
+    contentType,
+    query,
+  ])
 
   // Authors sort on their own axis and keep their own remembered choice, so the
   // control below switches which preference it drives rather than which control
@@ -691,7 +706,7 @@ export function Browse({
       : contentType === "publications"
         ? publications.length
         : authors.length
-  const canFilterSaved = !isAuthors && sourceCount > 0
+  const canFilterBookmarked = sourceCount > 0
 
   function pruneSelectedTags(nextType: ContentType) {
     const nextTags = getTags(
@@ -804,20 +819,20 @@ export function Browse({
             </div>
           )}
 
-          {canFilterSaved && (
+          {canFilterBookmarked && (
             <div className="flex items-end">
               <button
                 type="button"
-                aria-pressed={savedOnly}
+                aria-pressed={bookmarkedOnly}
                 disabled={bookmarksStatus !== "ready"}
-                onClick={() => setSavedOnly((current) => !current)}
+                onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
                 className="inline-flex h-11 items-center gap-2 border border-input bg-background px-3 text-sm font-semibold text-muted-foreground transition outline-none hover:border-foreground/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary"
               >
                 <Bookmark
                   aria-hidden="true"
-                  className={`size-4 ${savedOnly ? "fill-current" : ""}`}
+                  className={`size-4 ${bookmarkedOnly ? "fill-current" : ""}`}
                 />
-                Saved only
+                Bookmarked
               </button>
             </div>
           )}
@@ -931,7 +946,7 @@ export function Browse({
                 onClick={() => {
                   setQuery("")
                   setSelectedTags([])
-                  setSavedOnly(false)
+                  setBookmarkedOnly(false)
                 }}
                 className="mt-3 text-sm font-semibold text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
               >

@@ -11,7 +11,7 @@ import {
 } from "@/lib/bookmarks"
 
 export type BookmarkStatus = "loading" | "ready" | "unavailable"
-export type BookmarkToggleResult = "saved" | "removed" | "unavailable"
+export type BookmarkToggleResult = "bookmarked" | "removed" | "unavailable"
 
 function normalizeBookmarks(records: BookmarkRecord[]) {
   const byTarget = new Map<string, BookmarkRecord>()
@@ -89,7 +89,7 @@ export function useBookmarks() {
         }
 
         setBookmarks(normalizeBookmarks(await collection.all()))
-        return existing.length > 0 ? "removed" : "saved"
+        return existing.length > 0 ? "removed" : "bookmarked"
       } catch {
         setStatus("unavailable")
         return "unavailable"

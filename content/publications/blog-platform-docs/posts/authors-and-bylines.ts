@@ -67,6 +67,12 @@ Each link is a label plus a full web address, both validated. Empty label fails.
 
 Links appear only on the author page, as a row of bordered buttons opening in a new tab. No limit, but the row wraps: four or five is the practical maximum before it stops reading as a row.
 
+## Bookmarking an author
+
+The author page has the same browser-local Bookmark control as publication and post pages. Its stable target key is author: followed by the author ID, and its current profile address is stored with the record. No author field changes and the content registry remains the source of profile data.
+
+The authors view on the central browse page includes the same Bookmarked filter as posts and publications. Author result cards stay ordinary profile links; bookmarking happens only on the detail page.
+
 ## Post counts are derived, not set
 
 No field for post count. The registry counts:

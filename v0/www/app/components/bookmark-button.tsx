@@ -25,10 +25,10 @@ function BookmarkButtonControl({ title, ...target }: BookmarkButtonProps) {
     const result = await toggleBookmark(target)
 
     setAnnouncement(
-      result === "saved"
-        ? `${title} saved.`
+      result === "bookmarked"
+        ? `${title} bookmarked.`
         : result === "removed"
-          ? `${title} removed from saved items.`
+          ? `${title} removed from bookmarks.`
           : "Bookmarks are unavailable in this browser."
     )
   }
@@ -52,7 +52,13 @@ function BookmarkButtonControl({ title, ...target }: BookmarkButtonProps) {
           aria-hidden="true"
           className={`size-4 ${isSaved ? "fill-current" : ""}`}
         />
-        {isPending ? "Saving…" : isSaved ? "Saved" : "Save"}
+        {isPending
+          ? isSaved
+            ? "Removing…"
+            : "Bookmarking…"
+          : isSaved
+            ? "Bookmarked"
+            : "Bookmark"}
       </button>
       <span className="sr-only" aria-live="polite">
         {announcement ||

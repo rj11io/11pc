@@ -1,7 +1,7 @@
 export const BOOKMARKS_NAMESPACE = "11pc"
 export const BOOKMARKS_COLLECTION = "bookmarks-v1"
 
-export type BookmarkTargetType = "publication" | "post"
+export type BookmarkTargetType = "author" | "publication" | "post"
 
 export type BookmarkTarget = {
   targetType: BookmarkTargetType
@@ -19,6 +19,10 @@ export function publicationBookmarkKey(publicationId: string) {
   return `publication:${publicationId}`
 }
 
+export function authorBookmarkKey(authorId: string) {
+  return `author:${authorId}`
+}
+
 export function postBookmarkKey(publicationId: string, postId: number) {
   return `post:${publicationId}:${postId}`
 }
@@ -30,7 +34,9 @@ export function isBookmarkRecord(value: unknown): value is BookmarkRecord {
 
   return (
     typeof record.id === "string" &&
-    (record.targetType === "publication" || record.targetType === "post") &&
+    (record.targetType === "author" ||
+      record.targetType === "publication" ||
+      record.targetType === "post") &&
     typeof record.targetKey === "string" &&
     typeof record.href === "string" &&
     typeof record.savedAt === "string"
