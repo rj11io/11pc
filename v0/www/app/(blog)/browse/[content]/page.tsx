@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import { BookmarksProvider } from "@/app/components/bookmarks-provider"
 import { Browse } from "../../components/browse"
 import {
   authorPreviews,
@@ -49,12 +50,14 @@ export default async function BrowsePage({ params }: BrowsePageProps) {
   return (
     <main className="min-h-svh bg-background">
       <div className="mx-auto max-w-7xl px-5 py-4 sm:px-8 sm:py-6 lg:px-10 lg:py-8">
-        <Browse
-          contentType={content}
-          authors={authorPreviews}
-          posts={postPreviews}
-          publications={publicationPreviews}
-        />
+        <BookmarksProvider>
+          <Browse
+            contentType={content}
+            authors={authorPreviews}
+            posts={postPreviews}
+            publications={publicationPreviews}
+          />
+        </BookmarksProvider>
       </div>
     </main>
   )

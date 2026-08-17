@@ -52,6 +52,7 @@ Controls use the attribute matching what they do, not styling that looks selecte
 - Layout switcher: a pair of buttons using aria-pressed. Styling driven from the attribute (a class responds to aria-pressed), so visible state and announced state cannot disagree.
 - Filter toggle: aria-expanded, styling driven from the attribute.
 - Tag filters: buttons using aria-pressed.
+- Bookmark buttons and the Saved only filter: buttons using aria-pressed. Their bookmark icons are decorative and marked aria-hidden.
 - Content-type switcher on the browse page: links, not buttons, because it changes the address. Selected one carries aria-current set to page.
 - Section switcher on a publication page (moves between Posts, Synopsis, and Editor notes): a labelled group of buttons using aria-pressed.
 
@@ -91,7 +92,9 @@ Copying a link: same technique, different reason. The button swaps its icon and 
 
 The copy button on a code block behaves the same way, for the same reasons. It used to change its icon and label and announce nothing, so a screen reader user got no confirmation of the copy; it also let a refused clipboard reject unhandled, leaving the button looking broken with no explanation. Both buttons now report success and failure the same way.
 
-The empty state is not just a message. It includes a button that clears the search text and the selected tags, so a reader filtered into a corner gets out without finding and emptying each control.
+Bookmark buttons confirm saved, removed, and unavailable outcomes through a polite live region. They stay disabled until browser storage has been checked, so a reader cannot start an operation whose state is still unknown.
+
+The empty state is not just a message. It includes a button that clears the search text, selected tags, and Saved only state, so a reader filtered into a corner gets out without finding and emptying each control.
 
 ## Focus
 

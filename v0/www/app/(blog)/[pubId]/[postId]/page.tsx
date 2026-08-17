@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 
 import { AuthorByline } from "../../components/author-byline"
 import { ContentIndex } from "../../components/content-index"
+import { BookmarkButton } from "@/app/components/bookmark-button"
 import {
   CONTENT_HEADING_OFFSET,
   CONTENT_TITLE_ID,
@@ -14,6 +15,7 @@ import { ShareActions } from "@/app/components/share-actions"
 import { CoverImage } from "@/components/media/cover-image"
 import { coverMonogram } from "@/components/media/cover-monogram"
 import { absoluteUrl } from "@/lib/site"
+import { postBookmarkKey } from "@/lib/bookmarks"
 import {
   allPosts,
   getPost,
@@ -219,6 +221,14 @@ export default async function PostPage({ params }: PostPageProps) {
                     )}
                   </div>
                 )}
+                <div className="ml-auto">
+                  <BookmarkButton
+                    targetType="post"
+                    targetKey={postBookmarkKey(publication.pubId, post.postId)}
+                    href={postHref(publication.pubId, post)}
+                    title={post.title}
+                  />
+                </div>
               </div>
               <h1
                 id={CONTENT_TITLE_ID}

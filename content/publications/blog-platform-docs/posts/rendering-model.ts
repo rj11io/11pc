@@ -28,7 +28,7 @@ The trade: publishing requires a build. No way to add a post to a running site.
 
 Components run on the server unless marked. Starting a file with "use client" pulls it, plus everything it imports, into the code sent to the browser.
 
-Eighteen hand-written entries opt in, each with a reason:
+Twenty-one hand-written entries opt in, each with a reason:
 
 | File | Why it runs in the browser |
 | --- | --- |
@@ -38,6 +38,8 @@ Eighteen hand-written entries opt in, each with a reason:
 | copy-code-button.tsx | Writes to the clipboard |
 | copy-link-button.tsx | Writes to the clipboard, in the share row |
 | native-share-button.tsx | Opens the device share sheet, where there is one |
+| bookmark-button.tsx | Saves or removes one publication or post |
+| bookmarks-provider.tsx | Scopes the LSDB client to bookmark-enabled islands |
 | markdown-image.tsx | Opens the fullscreen viewer |
 | cover-image.tsx | Tracks whether a photo loaded, and opens the viewer |
 | image-lightbox.tsx | Zoom, pan, swipe, and keyboard navigation |
@@ -50,6 +52,7 @@ Eighteen hand-written entries opt in, each with a reason:
 | hooks/use-view-mode.ts | The list-or-cards choice |
 | hooks/use-sort-order.ts | The content and author sort choices |
 | hooks/use-mounted.ts | Answers whether the first render is over |
+| hooks/use-bookmarks.ts | Reads, writes, and subscribes to browser-local bookmarks |
 
 Vendored components under components/ui carry the same directive (generator output). Most are never imported, so never ship. One does: the dialog, which the image viewer is built on. See [Design tokens and theming](/blog-platform-docs/design-tokens) for what that directory is.
 
@@ -191,6 +194,24 @@ Three details in that store, and the argument for one store rather than three co
 Getting those right once is the whole argument for the factory.
 
 Note what is passed in: previews, not full posts. Everything handed to a browser component is serialised and sent over the network; the preview types keep every post body out of that payload.
+
+## Bookmarks are local reader data
+
+Publications and posts can be bookmarked without changing the content registry. A bookmark is reader-owned browser data, stored by @rj11io/lsdb-react in the bookmarks-v1 collection under this local-storage key:
+
+~~~text
+lsdb:11pc:bookmarks-v1
+~~~
+
+Each record carries its generated identifier, target type, stable target key, current address, and save time. Publication keys use publication: followed by the publication ID. Post keys use post: followed by the publication ID and numeric post ID. The numeric ID stays stable if a post slug changes; the address remains available for a future saved-items view.
+
+Only detail pages write bookmarks. The browse page reads the same collection to offer Saved only for posts and publications. Cards stay ordinary links, and authors are not bookmarkable.
+
+The provider is not mounted at the root. A detail-page button owns one small provider, while the browse route wraps only its browser component. That keeps LSDB out of pages that do not use it and preserves the server-component boundary around the rest of the site.
+
+Construction is safe during prerendering, but storage access waits for the browser. The server and hydration render bookmark controls in their neutral disabled state; the hook reads the collection after mounting and then enables them. Writes notify other consumers on the page and storage events update other tabs.
+
+The integration is fail-soft. Records are checked before use and duplicate target keys collapse to one visible bookmark. Malformed or invalid stored data is ignored and treated as empty. If local storage is blocked or a write is refused, the bookmark controls become unavailable and Saved only stops applying. Routes, content, search, feeds, and static generation continue unchanged.
 
 ## Markdown is parsed twice
 
