@@ -23,7 +23,7 @@ Nothing else about the view is in the address. Search text and selected tags liv
 
 Layout and sort order persist. Layout is stored in the browser under 11pc:view-mode and shared by every list on the site: choosing list on the browse page also gives list inside a publication, this visit and the next. Sort choices are stored the same way (see Sorting below). Reader preferences, not shareable view state, so they live in the browser, not the address.
 
-Bookmarks persist separately as reader data. They are records rather than one preference value, stored under lsdb:11pc:bookmarks-v1. The Bookmarked switch also persists, independently for each view, under 11pc:bookmarked-filter:posts, 11pc:bookmarked-filter:publications, and 11pc:bookmarked-filter:authors. Turning it on for posts does not turn it on for publications or authors.
+Bookmarks persist separately as reader data. They are records rather than one preference value, stored under lsdb:11pc:bookmarks-v1. The central Bookmarked switches persist independently under 11pc:bookmarked-filter:posts, 11pc:bookmarked-filter:publications, and 11pc:bookmarked-filter:authors. Publication post browsers use their own 11pc:bookmarked-filter:publication-posts preference. None changes another.
 
 Pages are built ahead of time, so the server cannot know the preference: a stored choice of list draws briefly as cards before the page corrects itself. See [How pages are rendered](/blog-platform-docs/rendering-model).
 
@@ -122,7 +122,7 @@ The value still exists in the sort function, so the behaviour is reachable and c
 
 A publication page has its own search box, deliberately narrower than the browse page. Matches only the **title, excerpt, and tags** of posts in that publication. Not the publication name (every result shares it), not author names.
 
-Tag list drawn only from that publication's posts. Same five sort options, sharing the option list and sort function with the browse page. Bookmarked is not repeated here; it belongs to the central browse page. Alongside the posts, section buttons switch to the publication's synopsis and editor notes; each section appears only if that field is filled in.
+Tag list drawn only from that publication's posts. Same five sort options, sharing the option list and sort function with the central browse page. Bookmarked is available here too, but its persisted state is separate from central browse. It narrows only this publication's posts and still combines with search and tags using AND. Alongside the posts, section buttons switch to the publication's synopsis and editor notes; each section appears only if that field is filled in.
 
 ## The other ways in
 

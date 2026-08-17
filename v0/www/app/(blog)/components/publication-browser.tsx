@@ -1,9 +1,12 @@
 "use client"
 
-import { Grid2X2, List, Search } from "lucide-react"
+import { Bookmark, Grid2X2, List, Search } from "lucide-react"
 import * as React from "react"
 
+import { usePublicationPostBookmarkedFilter } from "@/hooks/use-bookmarked-filter"
+import { useBookmarks } from "@/hooks/use-bookmarks"
 import { useViewMode } from "@/hooks/use-view-mode"
+import { postBookmarkKey } from "@/lib/bookmarks"
 import type { PostPreview } from "@content/types"
 import {
   contentSortOptions,
@@ -32,6 +35,10 @@ export function PublicationBrowser({
   const [query, setQuery] = React.useState("")
   const [selectedTags, setSelectedTags] = React.useState<string[]>([])
   const [filtersOpen, setFiltersOpen] = React.useState(false)
+  const [bookmarkedOnly, setBookmarkedOnly] =
+    usePublicationPostBookmarkedFilter()
+  const { bookmarkedKeys, status: bookmarksStatus } = useBookmarks()
+  const bookmarkFilterActive = bookmarkedOnly && bookmarksStatus === "ready"
 
   const availableTags = React.useMemo(
     () =>
@@ -50,12 +57,21 @@ export function PublicationBrowser({
         .toLocaleLowerCase()
       return (
         (!needle || searchText.includes(needle)) &&
-        selectedTags.every((tag) => post.tags.includes(tag))
+        selectedTags.every((tag) => post.tags.includes(tag)) &&
+        (!bookmarkFilterActive ||
+          bookmarkedKeys.has(postBookmarkKey(post.publicationId, post.postId)))
       )
     })
 
     return sortContent(filtered, sortOrder)
-  }, [posts, query, selectedTags, sortOrder])
+  }, [
+    bookmarkedKeys,
+    bookmarkFilterActive,
+    posts,
+    query,
+    selectedTags,
+    sortOrder,
+  ])
 
   function toggleTag(tag: string) {
     setSelectedTags((current) =>
@@ -166,6 +182,24 @@ export function PublicationBrowser({
                 </div>
               )}
 
+              {posts.length > 0 && (
+                <div className="flex items-end">
+                  <button
+                    type="button"
+                    aria-pressed={bookmarkedOnly}
+                    disabled={bookmarksStatus !== "ready"}
+                    onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
+                    className="inline-flex h-11 items-center gap-2 border border-input bg-background px-3 text-sm font-semibold text-muted-foreground transition outline-none hover:border-foreground/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary"
+                  >
+                    <Bookmark
+                      aria-hidden="true"
+                      className={`size-4 ${bookmarkedOnly ? "fill-current" : ""}`}
+                    />
+                    Bookmarked
+                  </button>
+                </div>
+              )}
+
               <div>
                 <span className="mb-2 block text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                   Layout
@@ -247,10 +281,11 @@ export function PublicationBrowser({
                 onClick={() => {
                   setQuery("")
                   setSelectedTags([])
+                  setBookmarkedOnly(false)
                 }}
                 className="mt-3 text-sm font-semibold text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
               >
-                Clear search and tags
+                Clear filters
               </button>
             </div>
           )}

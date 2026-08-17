@@ -7,21 +7,21 @@ type BookmarkedFilterValue = "off" | "on"
 
 const values: readonly BookmarkedFilterValue[] = ["off", "on"]
 
-const usePostBookmarkedFilter =
+const usePostBrowseBookmarkedFilter =
   createPersistedPreference<BookmarkedFilterValue>(
     "11pc:bookmarked-filter:posts",
     values,
     "off"
   )
 
-const usePublicationBookmarkedFilter =
+const usePublicationBrowseBookmarkedFilter =
   createPersistedPreference<BookmarkedFilterValue>(
     "11pc:bookmarked-filter:publications",
     values,
     "off"
   )
 
-const useAuthorBookmarkedFilter =
+const useAuthorBrowseBookmarkedFilter =
   createPersistedPreference<BookmarkedFilterValue>(
     "11pc:bookmarked-filter:authors",
     values,
@@ -30,15 +30,32 @@ const useAuthorBookmarkedFilter =
 
 /** Each browse content type remembers its Bookmarked toggle independently. */
 export function useBookmarkedFilter(contentType: BrowseContentType) {
-  const posts = usePostBookmarkedFilter()
-  const publications = usePublicationBookmarkedFilter()
-  const authors = useAuthorBookmarkedFilter()
+  const posts = usePostBrowseBookmarkedFilter()
+  const publications = usePublicationBrowseBookmarkedFilter()
+  const authors = useAuthorBrowseBookmarkedFilter()
   const [value, setValue] =
     contentType === "posts"
       ? posts
       : contentType === "publications"
         ? publications
         : authors
+
+  return [
+    value === "on",
+    (next: boolean) => setValue(next ? "on" : "off"),
+  ] as const
+}
+
+const usePublicationPostBookmarkedPreference =
+  createPersistedPreference<BookmarkedFilterValue>(
+    "11pc:bookmarked-filter:publication-posts",
+    values,
+    "off"
+  )
+
+/** Publication post browsers do not share the central posts filter state. */
+export function usePublicationPostBookmarkedFilter() {
+  const [value, setValue] = usePublicationPostBookmarkedPreference()
 
   return [
     value === "on",

@@ -52,7 +52,7 @@ Twenty-two hand-written entries opt in, each with a reason:
 | hooks/use-view-mode.ts | The list-or-cards choice |
 | hooks/use-sort-order.ts | The content and author sort choices |
 | hooks/use-mounted.ts | Answers whether the first render is over |
-| hooks/use-bookmarked-filter.ts | Remembers Bookmarked separately for each browse content type |
+| hooks/use-bookmarked-filter.ts | Remembers independent Bookmarked filters for central browse and publication post browsers |
 | hooks/use-bookmarks.ts | Reads, writes, and subscribes to browser-local bookmarks |
 
 Vendored components under components/ui carry the same directive (generator output). Most are never imported, so never ship. One does: the dialog, which the image viewer is built on. See [Design tokens and theming](/blog-platform-docs/design-tokens) for what that directory is.
@@ -164,9 +164,9 @@ The remaining per-visit browse state (search text and selected tags) is ordinary
 
 ## A reader preference the server cannot know
 
-Six pieces of view state outlive the page: the card-or-list layout, how posts and publications are sorted, how authors are sorted, and one Bookmarked toggle for each of the three browse content types. Each lives in the browser's local storage, read through the same small store: built by v0/www/hooks/use-persisted-preference.ts, then configured by the view, sort, and bookmarked-filter hooks.
+Seven pieces of view state outlive the page: the card-or-list layout, how posts and publications are sorted, how authors are sorted, one Bookmarked toggle for each of the three central browse content types, and one for publication post browsers. Each lives in the browser's local storage, read through the same small store: built by v0/www/hooks/use-persisted-preference.ts, then configured by the view, sort, and bookmarked-filter hooks.
 
-Layout and content sorting are shared by every relevant list, so choosing either on the browse page also applies inside a publication. Authors keep their own sort because none of its options mean anything for a post. Bookmarked is also separate: posts, publications, and authors each restore their own last toggle state.
+Layout and content sorting are shared by every relevant list, so choosing either on the browse page also applies inside a publication. Authors keep their own sort because none of its options mean anything for a post. Bookmarked stays separate: central posts, publications, authors, and publication post browsers each restore their own last toggle state.
 
 The same reasoning applies to any preference added next.
 
@@ -206,9 +206,9 @@ lsdb:11pc:bookmarks-v1
 
 Each record carries its generated identifier, target type, stable target key, current address, and save time. Author keys use author: followed by the author ID. Publication keys use publication: followed by the publication ID. Post keys use post: followed by the publication ID and numeric post ID. The numeric ID stays stable if a post slug changes; the address remains available for a future bookmarks view.
 
-Only detail pages write bookmarks. The browse page reads the same collection to offer Bookmarked for all three content types. Cards stay ordinary links.
+Only detail pages write bookmarks. The central browse page reads the same collection to offer Bookmarked for all three content types, and a publication's post browser offers the same filter for its posts. Cards stay ordinary links.
 
-The provider is not mounted at the root. A detail-page button owns one small provider, while the browse route wraps only its browser component. That keeps LSDB out of pages that do not use it and preserves the server-component boundary around the rest of the site.
+The provider is not mounted at the root. A detail-page button owns one small provider, the central browse route wraps only its browser component, and a publication page wraps its post browser. That keeps LSDB out of pages that do not use it and preserves the server-component boundary around the rest of the site.
 
 Construction is safe during prerendering, but storage access waits for the browser. The server and hydration render bookmark controls in their neutral disabled state; the hook reads the collection after mounting and then enables them. Writes notify other consumers on the page and storage events update other tabs.
 

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import { AuthorByline } from "../components/author-byline"
 import { PublicationBrowser } from "../components/publication-browser"
 import { BookmarkButton } from "@/app/components/bookmark-button"
+import { BookmarksProvider } from "@/app/components/bookmarks-provider"
 import { ShareActions } from "@/app/components/share-actions"
 import { CoverImage } from "@/components/media/cover-image"
 import { coverMonogram } from "@/components/media/cover-monogram"
@@ -206,11 +207,13 @@ export default async function PublicationPage({
           </div>
         </header>
 
-        <PublicationBrowser
-          posts={previews}
-          synopsis={publication.synopsis}
-          editorNotes={publication.editorNotes}
-        />
+        <BookmarksProvider>
+          <PublicationBrowser
+            posts={previews}
+            synopsis={publication.synopsis}
+            editorNotes={publication.editorNotes}
+          />
+        </BookmarksProvider>
 
         {/*
           After the post list rather than in the header, so it closes the page
